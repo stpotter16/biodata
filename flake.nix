@@ -15,7 +15,7 @@
   } @ inputs:
     flake-utils.lib.eachDefaultSystem (system: let
       gopkg = go-nixpkgs.legacyPackages.${system};
-      go = gopkg.go_1_23;
+      go = gopkg.go_1_25;
     in {
       devShells.default = gopkg.mkShell {
         packages = [
