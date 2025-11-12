@@ -1,5 +1,8 @@
 shell:
 	nix develop -c $$SHELL
 
-server:
-	@go run cmd/server/main.go
+server/build:
+	@go build -o ./tmp/server cmd/server/main.go
+
+server/run: server/build
+	./tmp/server
