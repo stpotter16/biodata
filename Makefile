@@ -8,4 +8,4 @@ server/run: server/build
 	./tmp/server
 
 server/live:
-	echo "Running server"
+	./dev-scripts/serve.sh
