@@ -30,6 +30,8 @@
         ];
 
         shellHook = ''
+          PROJECT_NAME="$(basename "$PWD")"
+          export GOPATH="$HOME/.local/share/go-workspaces/$PROJECT_NAME"
           export GOROOT="${go}/share/go"
 
           go version
