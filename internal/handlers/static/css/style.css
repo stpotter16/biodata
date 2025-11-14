@@ -45,6 +45,62 @@ table + a {
     margin-top: 1rem;
 }
 
+/* Form styling */
+form {
+    max-width: 400px;
+    margin: 2rem 0;
+}
+
+label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus {
+    outline: 2px solid #5bf;
+    outline-offset: 2px;
+    border-color: #5bf;
+}
+
+input[type="submit"] {
+    margin-top: 1.5rem;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #555;
+}
+
+input[type="submit"]:active {
+    background-color: #222;
+}
+
 @media (prefers-color-scheme: dark){
     body{color:#ddd;background:#123}
     a:focus{
@@ -63,6 +119,34 @@ table + a {
 
     tbody tr:hover {
         background-color: #1a2a3a;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+        background-color: #1a2a3a;
+        border-color: #445;
+        color: #ddd;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus {
+        background-color: #223344;
+        border-color: #5bf;
+    }
+
+    input[type="submit"] {
+        background-color: #5bf;
+        color: #123;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #7cf;
+    }
+
+    input[type="submit"]:active {
+        background-color: #4ae;
     }
 }
 

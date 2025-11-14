@@ -2,7 +2,9 @@
 Track basic biodata
 
 # TODO
-- Index page
+- Add new entry page
+- Auth middleware
+- Logging middleware
 - Build a go linter
 - Install shellcheck
 - Build a shell linter
