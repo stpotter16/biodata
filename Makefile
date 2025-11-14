@@ -9,3 +9,6 @@ server/run: server/build
 
 server/live:
 	./dev-scripts/serve.sh
+
+server/lint:
+	./dev-scripts/lint-server.sh
