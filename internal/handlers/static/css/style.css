@@ -1,0 +1,19 @@
+body{
+    color: #333;
+    background-color: #fdfdfe;
+    font-size: 18px;
+    font: 1.2rem/1.5 Century Gothic, sans-serif;
+    max-width: 600px;
+    max-width: 55ch;
+    margin: 0 auto;
+    padding: 2.5rem 1.75rem;
+}
+
+@media (prefers-color-scheme: dark){
+    body{color:#ddd;background:#123}
+    a:focus{
+        outline: 0.2rem solid #fed;
+    }
+    a{color:#5bf;}
+}
+
