@@ -39,6 +39,12 @@ tbody tr:hover {
     background-color: #f8f8f9;
 }
 
+table + a {
+    display: block;
+    text-align: right;
+    margin-top: 1rem;
+}
+
 @media (prefers-color-scheme: dark){
     body{color:#ddd;background:#123}
     a:focus{
