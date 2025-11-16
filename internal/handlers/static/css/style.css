@@ -35,6 +35,10 @@ td:nth-child(3) {
 }
 
 /* Hover effect for better readability */
+tbody tr {
+    cursor: pointer;
+}
+
 tbody tr:hover {
     background-color: #f8f8f9;
 }
