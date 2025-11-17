@@ -9,3 +9,4 @@ Track basic biodata
 - Install prettier
 - Build a html linter
 - index page: Add entry link is too big
+- Favicon
