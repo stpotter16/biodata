@@ -1,9 +1,14 @@
 package handlers
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/stpotter16/biodata/internal/handlers/middleware"
+)
 
 func NewServer() http.Handler {
 	mux := http.NewServeMux()
 	addRoutes(mux)
-	return mux
+	handler := middleware.LoggingWrapper(mux)
+	return handler
 }
