@@ -2,7 +2,6 @@
 Track basic biodata
 
 # TODO
-- Edit entry page
 - Auth middleware
 - Logging middleware
 - Install shellcheck
