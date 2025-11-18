@@ -10,3 +10,4 @@ Track basic biodata
 - Build a html linter
 - index page: Add entry link is too big
 - Favicon
+- Error handling

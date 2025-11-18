@@ -1,8 +1,67 @@
 {{ define "title" }}
     Add Entry
 {{ end }}
+{{ define "script-tags" }}
+<script type="module">
+const newEntryForm = document.getElementById("new-entry");
+
+function setNewEntryFormState(isEnabled) {
+    document.querySelectorAll("#new-entry input").forEach((el) => {
+        el.disabled = !isEnabled;
+    });
+}
+
+function disableNewEntryForm() {
+    setNewEntryFormState(false);
+};
+
+function enableNewEntryForm() {
+    setNewEntryFormState(true);
+};
+
+async function newEntry(date, weight, waist, bp) {
+    return fetch("/api/entry", {
+        method: "POST",
+        mode: "same-origin",
+        credentials: "include",
+        cache: "no-cache",
+        redirect: "error",
+        body: JSON.stringify({
+            date: date,
+            weight: weight,
+            waist: waist,
+            bp: bp
+        }),
+    }).then((response) => {
+        if (!response.ok) {
+            return response.text().then((error) => {
+                return Promise.reject(error);
+            })
+        }
+        return Promise.resolve();
+    });
+}
+
+newEntryForm.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    const date = document.getElementById("date");
+    const weight = document.getElementById("weight");
+    const waist = document.getElementById("waist");
+    const bp = document.getElementById("bp");
+    disableNewEntryForm()
+    newEntry(date, weight, waist, bp)
+        .then(() => {
+            document.location = "/";
+        })
+        .catch((error) => {
+            enableNewEntryForm();
+            console.log(error);
+        });
+});
+</script>
+{{ end }}
 {{ define "content" }}
-<form>
+<form id="new-entry">
     <label for="date">Date</label>
     <input type="date" name="date" id="date" required/>
     <label for="weight">Weight</label>
