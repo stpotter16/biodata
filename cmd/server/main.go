@@ -21,6 +21,7 @@ func run(
 	stdout, stderr io.Writer,
 ) error {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
 
