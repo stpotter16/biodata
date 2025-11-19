@@ -44,10 +44,10 @@ async function newEntry(date, weight, waist, bp) {
 
 newEntryForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    const date = document.getElementById("date");
-    const weight = document.getElementById("weight");
-    const waist = document.getElementById("waist");
-    const bp = document.getElementById("bp");
+    const date = document.getElementById("date").value;
+    const weight = document.getElementById("weight").value;
+    const waist = document.getElementById("waist").value;
+    const bp = document.getElementById("bp").value;
     disableNewEntryForm()
     newEntry(date, weight, waist, bp)
         .then(() => {

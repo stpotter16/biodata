@@ -1,8 +1,68 @@
 {{ define "title" }}
     Edit Entry
 {{ end }}
+{{ define "script-tags" }}
+<script type="module">
+const editEntryForm = document.getElementById("edit-entry");
+
+function setEditEntryFormState(isEnabled) {
+    document.querySelectorAll("#edit-entry input").forEach((el) => {
+        el.disabled = !isEnabled;
+    });
+}
+
+function disableEditEntryForm() {
+    setEditEntryFormState(false);
+};
+
+function enableEditEntryForm() {
+    setEditEntryFormState(true);
+};
+
+async function editEntry(date, weight, waist, bp) {
+    const url = `/api/entries/${date}`;
+    return fetch(url, {
+        method: "PUT",
+        mode: "same-origin",
+        credentials: "include",
+        cache: "no-cache",
+        redirect: "error",
+        body: JSON.stringify({
+            weight: weight,
+            waist: waist,
+            bp: bp
+        }),
+    }).then((response) => {
+        if (!response.ok) {
+            return response.text().then((error) => {
+                return Promise.reject(error);
+            })
+        }
+        return Promise.resolve();
+    });
+}
+
+editEntryForm.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    const date = document.getElementById("date").innerText;
+    const weight = document.getElementById("weight").value;
+    const waist = document.getElementById("waist").value;
+    const bp = document.getElementById("bp").value;
+    disableEditEntryForm()
+    editEntry(date, weight, waist, bp)
+        .then(() => {
+            document.location = "/";
+        })
+        .catch((error) => {
+            enableEditEntryForm();
+            console.log(error);
+        });
+});
+</script>
+{{ end }}
 {{ define "content" }}
-<form>
+<h1 id="date">2025-11-13</h1>
+<form id="edit-entry">
     <label for="weight">Weight</label>
     <input type="number" name="weight" id="weight" required/>
     <label for="waist">Waist</label>

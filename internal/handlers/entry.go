@@ -29,7 +29,7 @@ func entryPost() http.HandlerFunc {
 		decoder := json.NewDecoder(r.Body)
 
 		if err := decoder.Decode(&body); err != nil {
-			log.Printf("Invalid auth request: %v", err)
+			log.Printf("Invalid new entry request: %v", err)
 			http.Error(w, fmt.Sprintf("Invalid new entry request: %v", err), http.StatusBadRequest)
 			return
 		}
@@ -40,5 +40,20 @@ func entryPost() http.HandlerFunc {
 
 func entryPut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		body := struct {
+			Weight string `json:"weight"`
+			Waist  string `json:"waist"`
+			BP     string `json:"bp"`
+		}{}
+
+		decoder := json.NewDecoder(r.Body)
+
+		if err := decoder.Decode(&body); err != nil {
+			log.Printf("Invalid edit entry request: %v", err)
+			http.Error(w, fmt.Sprintf("Invalid edit entry request: %v", err), http.StatusBadRequest)
+			return
+		}
+
+		log.Printf("Received %v", body)
 	}
 }
