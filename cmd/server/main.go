@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/stpotter16/biodata/internal/handlers"
+	"github.com/stpotter16/biodata/internal/store/db"
 )
 
 func run(
@@ -20,10 +21,17 @@ func run(
 	stdin io.Reader,
 	stdout, stderr io.Writer,
 ) error {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
+
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	dbPath := "biodata.sqlite"
+	log.Printf("Opening database at %v", dbPath)
+	_, err := db.New(dbPath)
+	if err != nil {
+		return err
+	}
 
 	handler := handlers.NewServer()
 	server := &http.Server{
