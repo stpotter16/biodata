@@ -33,7 +33,10 @@ func run(
 	if err != nil {
 		return err
 	}
-	store := sqlite.New(db)
+	store, err := sqlite.New(db)
+	if err != nil {
+		return err
+	}
 
 	handler := handlers.NewServer(store)
 	server := &http.Server{
