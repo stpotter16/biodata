@@ -34,9 +34,8 @@ func run(
 		return err
 	}
 	store := sqlite.New(db)
-	log.Printf("Opened the store: %v", store)
 
-	handler := handlers.NewServer()
+	handler := handlers.NewServer(store)
 	server := &http.Server{
 		Addr:    ":8080",
 		Handler: handler,
