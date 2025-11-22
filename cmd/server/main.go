@@ -12,6 +12,7 @@ import (
 
 	"github.com/stpotter16/biodata/internal/handlers"
 	"github.com/stpotter16/biodata/internal/store/db"
+	"github.com/stpotter16/biodata/internal/store/sqlite"
 )
 
 func run(
@@ -28,10 +29,12 @@ func run(
 
 	dbPath := "biodata.sqlite"
 	log.Printf("Opening database at %v", dbPath)
-	_, err := db.New(dbPath)
+	db, err := db.New(dbPath)
 	if err != nil {
 		return err
 	}
+	store := sqlite.New(db)
+	log.Printf("Opened the store: %v", store)
 
 	handler := handlers.NewServer()
 	server := &http.Server{
