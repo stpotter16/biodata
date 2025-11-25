@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"runtime"
@@ -34,4 +35,31 @@ func New(dbPath string) (DB, error) {
 	}
 
 	return db, nil
+}
+
+func (db DB) QueryRow(ctx context.Context, dest any, query string, args ...any) error {
+	row := db.readDB.QueryRowContext(ctx, query, args...)
+	if err := row.Scan(dest); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db DB) ExecuteTransaction(ctx context.Context, transactions ...string) error {
+	tx, err := db.writeDB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	for _, statement := range transactions {
+		_, err = tx.Exec(statement)
+		if err != nil {
+			return err
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	return nil
 }
