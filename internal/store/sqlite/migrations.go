@@ -22,7 +22,8 @@ var migrationFs embed.FS
 func (s Store) runMigrations() error {
 	var currentSchemaVersion int
 	// TODO: What to do with the context here...
-	if err := s.db.QueryRow(context.TODO(), &currentSchemaVersion, `PRAGMA user_version`); err != nil {
+	row := s.db.QueryRow(context.TODO(), `PRAGMA user_version`)
+	if err := row.Scan(&currentSchemaVersion); err != nil {
 		log.Printf("Could not read the current schema version: %v", err)
 		return err
 	}

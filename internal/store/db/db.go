@@ -45,12 +45,26 @@ func New(dbPath string) (DB, error) {
 	return db, nil
 }
 
-func (db DB) QueryRow(ctx context.Context, dest any, query string, args ...any) error {
-	row := db.readDB.QueryRowContext(ctx, query, args...)
-	if err := row.Scan(dest); err != nil {
-		return err
+func (db *DB) Query(ctx context.Context, query string, args ...any) (*sql.Rows, error) {
+	rows, err := db.readDB.QueryContext(ctx, query, args...)
+	if err != nil {
+		log.Printf("Could not execute query: %v", err)
+		return nil, err
 	}
-	return nil
+	return rows, nil
+}
+
+func (db *DB) QueryRow(ctx context.Context, query string, args ...any) *sql.Row {
+	return db.readDB.QueryRowContext(ctx, query, args...)
+}
+
+func (db *DB) Exec(ctx context.Context, query string, args ...any) (sql.Result, error) {
+	result, err := db.writeDB.ExecContext(ctx, query, args...)
+	if err != nil {
+		log.Printf("Could not execute statement: %v", err)
+		return nil, err
+	}
+	return result, nil
 }
 
 func (db DB) ExecuteTransaction(ctx context.Context, transactions ...string) error {
