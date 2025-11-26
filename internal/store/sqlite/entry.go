@@ -9,7 +9,8 @@ import (
 func (s Store) GetEntries() ([]types.EntryDTO, error) {
 	query := `
 	SELECT id, date, weight, waist, bp, created, last_modified
-	FROM entry;
+	FROM entry
+	ORDER BY id DESC;
 	`
 
 	// TODO - what to do with this context

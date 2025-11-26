@@ -2,7 +2,6 @@
 Track basic biodata
 
 # Features
-- Read entries in index page
 - Add entries in new page
 - Edit entries in edit page
 - Env secret for passphrase

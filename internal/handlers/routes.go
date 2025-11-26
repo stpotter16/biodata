@@ -8,7 +8,7 @@ import (
 
 func addRoutes(mux *http.ServeMux, store store.Store) {
 	// views
-	mux.HandleFunc("GET /{$}", indexGet())
+	mux.HandleFunc("GET /{$}", indexGet(store))
 	mux.HandleFunc("GET /entry/new", newEntryGet())
 	mux.HandleFunc("GET /entry/{date}/edit", editEntryGet())
 	mux.Handle("GET /static/", http.StripPrefix("/static/", serveStaticFiles()))
