@@ -3,10 +3,10 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/stpotter16/biodata/internal/store/sqlite"
+	"github.com/stpotter16/biodata/internal/store"
 )
 
-func addRoutes(mux *http.ServeMux, store sqlite.Store) {
+func addRoutes(mux *http.ServeMux, store store.Store) {
 	// views
 	mux.HandleFunc("GET /{$}", indexGet())
 	mux.HandleFunc("GET /entry/new", newEntryGet())

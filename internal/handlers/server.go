@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/stpotter16/biodata/internal/handlers/middleware"
-	"github.com/stpotter16/biodata/internal/store/sqlite"
+	"github.com/stpotter16/biodata/internal/store"
 )
 
-func NewServer(store sqlite.Store) http.Handler {
+func NewServer(store store.Store) http.Handler {
 	mux := http.NewServeMux()
 	addRoutes(mux, store)
 	handler := middleware.LoggingWrapper(mux)
