@@ -16,8 +16,8 @@ Track basic biodata
 - Install prettier
 - Build an html linter
 - index page: Add entry link is too big
-- Error handling - ties into logging
-- Centralized parsing
+- Error handling - ties into logging (better types too)
+- Centralized parsing (better types)
 - Favicon
 - Security (csp nonce, tokens, csrf)
 - Too much logging (log at lowest level only)
