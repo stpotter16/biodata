@@ -21,6 +21,10 @@ func New(dbPath string) (DB, error) {
 		return DB{}, err
 	}
 	readDB.SetMaxOpenConns(max(4, runtime.NumCPU()))
+	if err = applyPragmas(readDB); err != nil {
+		log.Printf("Could not apply PRAGMAs to read db: %v", err)
+		return DB{}, err
+	}
 
 	writeDB, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
@@ -28,6 +32,10 @@ func New(dbPath string) (DB, error) {
 		return DB{}, err
 	}
 	writeDB.SetMaxOpenConns(1)
+	if err = applyPragmas(writeDB); err != nil {
+		log.Printf("Could not apply PRAGMAs to write db: %v", err)
+		return DB{}, err
+	}
 
 	db := DB{
 		readDB:  readDB,
@@ -59,6 +67,24 @@ func (db DB) ExecuteTransaction(ctx context.Context, transactions ...string) err
 	}
 
 	if err = tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func applyPragmas(db *sql.DB) error {
+	// TODO - maybe use context here
+	if _, err := db.Exec(`
+		-- https://litestream.io/tips/
+		-- https://kerkour.com/sqlite-for-servers
+		PRAGMA journal_mode = WAL;
+		PRAGMA busy_timeout = 5000;
+		PRAGMA synchronous = NORMAL;
+        PRAGMA wal_autocheckpoint = 0;
+		PRAGMA cache_size = 1000000000;
+		PRAGMA foreign_keys = true;
+		PRAGMA temp_store = memory;
+	`); err != nil {
 		return err
 	}
 	return nil

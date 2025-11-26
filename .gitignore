@@ -34,3 +34,5 @@ go.work.sum
 
 # Database
 biodata.sqlite
+biodata.sqlite-shm
+biodata.sqlite-wal
