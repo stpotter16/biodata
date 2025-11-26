@@ -3,7 +3,13 @@ Track basic biodata
 
 # Features
 - Performance pragmas
+- Read entries in index page
+- Add entries in new page
+- Edit entries in edit page
+- Env secret for passphrase
 - Auth middleware
+- Set db as path
+- Nix module
 
 # Improvements
 - Install shellcheck
