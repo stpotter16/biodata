@@ -1,11 +1,13 @@
 package types
 
+import "database/sql"
+
 type EntryDTO struct {
-	id            int
-	date          string
-	weight        float64
-	waist         float64
-	bp            string
-	created       string
-	last_modified string
+	Id           int
+	Date         string
+	Weight       sql.NullFloat64
+	Waist        sql.NullFloat64
+	Bp           sql.NullString
+	Created      string
+	LastModified string
 }
