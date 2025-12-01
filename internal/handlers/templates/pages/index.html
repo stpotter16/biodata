@@ -10,7 +10,7 @@
         </tr>
         {{ range .Entries }}
         <tr>
-            <td>{{ .Date }}</td>
+            <td>{{ formatDate .Date }}</td>
             <td>{{ .Weight }}</td>
             <td>{{ .Waist }}</td>
             <td>{{ .BP }}</td>

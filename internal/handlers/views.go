@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"time"
 
 	"github.com/stpotter16/biodata/internal/store"
 	"github.com/stpotter16/biodata/internal/types"
@@ -13,9 +14,16 @@ import (
 //go:embed templates
 var templateFS embed.FS
 
+var funcMap = template.FuncMap{
+	"formatDate": func(t time.Time) string {
+		return t.Format("2006-01-02")
+	},
+}
+
 func indexGet(store store.Store) http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").
+			Funcs(funcMap).
 			ParseFS(
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/index.html"))
@@ -37,6 +45,7 @@ func indexGet(store store.Store) http.HandlerFunc {
 func newEntryGet() http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").
+			Funcs(funcMap).
 			ParseFS(
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/new_entry.html"))
@@ -48,6 +57,7 @@ func newEntryGet() http.HandlerFunc {
 func editEntryGet() http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").
+			Funcs(funcMap).
 			ParseFS(
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/edit_entry.html"))
