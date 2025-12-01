@@ -28,3 +28,7 @@ func New(db db.DB) (Store, error) {
 func formatTime(t time.Time) string {
 	return t.Format(timeFormat)
 }
+
+func parseTime(s string) (time.Time, error) {
+	return time.Parse(timeFormat, s)
+}

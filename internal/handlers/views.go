@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"embed"
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -20,9 +21,13 @@ func indexGet(store store.Store) http.HandlerFunc {
 				"templates/layouts/base.html", "templates/pages/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
 		// TODO - handle error
-		entries, _ := store.GetEntries()
+		entries, err := store.GetEntries()
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not read existing entries: %v", err), http.StatusInternalServerError)
+			return
+		}
 		t.Execute(w, struct {
-			Entries []types.EntryDTO
+			Entries []types.Entry
 		}{
 			Entries: entries,
 		})

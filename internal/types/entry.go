@@ -7,7 +7,7 @@ import (
 
 type EntryDTO struct {
 	Id           int
-	Date         string
+	Date         time.Time
 	Weight       sql.NullFloat64
 	Waist        sql.NullFloat64
 	Bp           sql.NullString

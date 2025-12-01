@@ -3,6 +3,6 @@ package store
 import "github.com/stpotter16/biodata/internal/types"
 
 type Store interface {
-	GetEntries() ([]types.EntryDTO, error)
+	GetEntries() ([]types.Entry, error)
 	InsertEntry(types.Entry) error
 }

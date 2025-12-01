@@ -52,3 +52,14 @@ func ParseEntryPost(r *http.Request) (types.Entry, error) {
 
 	return entry, nil
 }
+
+func ParseEntryDTO(entryDTO types.EntryDTO) (types.Entry, error) {
+	// TODO - Handle nulls
+	entry := types.Entry{
+		Date:   entryDTO.Date,
+		Weight: entryDTO.Waist.Float64,
+		Waist:  entryDTO.Waist.Float64,
+		BP:     entryDTO.Bp.String,
+	}
+	return entry, nil
+}
