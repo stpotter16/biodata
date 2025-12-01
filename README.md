@@ -4,7 +4,7 @@ Track basic biodata
 # Features
 - Add entries in new page
 - Edit entries in edit page
-- Env secret for passphrase
+- Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
 - Auth middleware
 - Set db as path
 - Nix module
@@ -19,4 +19,5 @@ Track basic biodata
 - Centralized parsing (better types)
 - Favicon
 - Security (csp nonce, tokens, csrf)
-- Too much logging (log at lowest level only)
+- Too much logging (log at lowest level only or whatever?)
+- All the TODOs
