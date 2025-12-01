@@ -2,8 +2,13 @@ package sqlite
 
 import (
 	"log"
+	"time"
 
 	"github.com/stpotter16/biodata/internal/store/db"
+)
+
+const (
+	timeFormat = time.RFC3339
 )
 
 type Store struct {
@@ -18,4 +23,8 @@ func New(db db.DB) (Store, error) {
 		return Store{}, err
 	}
 	return store, nil
+}
+
+func formatTime(t time.Time) string {
+	return t.Format(timeFormat)
 }

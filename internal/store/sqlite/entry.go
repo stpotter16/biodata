@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"context"
+	"time"
 
 	"github.com/stpotter16/biodata/internal/types"
 )
@@ -35,4 +36,29 @@ func (s Store) GetEntries() ([]types.EntryDTO, error) {
 	}
 
 	return entries, nil
+}
+
+func (s Store) InsertEntry(entry types.Entry) error {
+	insert := `
+	INSERT INTO entry
+	(date, weight, waist, bp, created, last_modified)
+	VALUES (?, ?, ?, ?, ?, ?);
+	`
+	now := formatTime(time.Now())
+
+	// TODO - what context?
+	_, err := s.db.Exec(
+		context.TODO(),
+		insert,
+		entry.Date,
+		entry.Weight,
+		entry.Waist,
+		entry.BP,
+		now,
+		now,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }

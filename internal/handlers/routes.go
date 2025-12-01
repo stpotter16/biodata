@@ -16,6 +16,6 @@ func addRoutes(mux *http.ServeMux, store store.Store) {
 	// API
 	mux.HandleFunc("GET /api/entries", entriesGet())
 	mux.HandleFunc("GET /api/entries/{date}", entryGet())
-	mux.HandleFunc("POST /api/entry", entryPost())
+	mux.HandleFunc("POST /api/entry", entryPost(store))
 	mux.HandleFunc("PUT /api/entries/{date}", entryPut())
 }

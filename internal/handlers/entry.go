@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/stpotter16/biodata/internal/parse"
+	"github.com/stpotter16/biodata/internal/store"
 )
 
 func entriesGet() http.HandlerFunc {
@@ -17,24 +20,16 @@ func entryGet() http.HandlerFunc {
 	}
 }
 
-func entryPost() http.HandlerFunc {
+func entryPost(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		body := struct {
-			Date   string `json:"date"`
-			Weight string `json:"weight"`
-			Waist  string `json:"waist"`
-			BP     string `json:"bp"`
-		}{}
-
-		decoder := json.NewDecoder(r.Body)
-
-		if err := decoder.Decode(&body); err != nil {
-			log.Printf("Invalid new entry request: %v", err)
+		newEntry, err := parse.ParseEntryPost(r)
+		if err != nil {
 			http.Error(w, fmt.Sprintf("Invalid new entry request: %v", err), http.StatusBadRequest)
 			return
 		}
 
-		log.Printf("Received %v", body)
+		// TODO - handler error
+		store.InsertEntry(newEntry)
 	}
 }
 
