@@ -17,7 +17,7 @@ type EntryDTO struct {
 
 type Entry struct {
 	Date   time.Time
-	Weight float64
-	Waist  float64
-	BP     string // TODO - this could be it's own type
+	Weight Weight
+	Waist  Waist
+	BP     BP
 }
