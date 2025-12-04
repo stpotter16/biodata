@@ -28,6 +28,13 @@ func (w Weight) String() string {
 	return fmt.Sprintf("%.1f", w.Float64())
 }
 
+func (w Weight) FormValue() string {
+	if w.isNil() {
+		return ""
+	}
+	return fmt.Sprintf("%g", *w.Value)
+}
+
 func NewWeight(val float64) Weight {
 	return Weight{Value: &val}
 }

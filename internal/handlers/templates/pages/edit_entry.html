@@ -61,14 +61,14 @@ editEntryForm.addEventListener("submit", (evt) => {
 </script>
 {{ end }}
 {{ define "content" }}
-<h1 id="date">2025-11-13</h1>
+<h1 id="date">{{ formatDate .Entry.Date }}</h1>
 <form id="edit-entry">
     <label for="weight">Weight</label>
-    <input type="number" name="weight" id="weight" required/>
+    <input type="number" name="weight" id="weight" value="{{ .Entry.Weight.FormValue }}" step="0.1" required/>
     <label for="waist">Waist</label>
-    <input type="number" name="waist" id="waist"/>
+    <input type="number" name="waist" id="waist" value="{{ .Entry.Waist.FormValue }}" step="0.1"/>
     <label for="bp">BP</label>
-    <input type="text" name="bp" id="bp"/>
+    <input type="text" name="bp" id="bp" value="{{ .Entry.BP }}"/>
     <input type="submit" value="Update"/>
 </form>
 {{ end }}

@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/stpotter16/biodata/internal/parse"
@@ -28,27 +26,20 @@ func entryPost(store store.Store) http.HandlerFunc {
 			return
 		}
 
-		// TODO - handler error
+		// TODO - handle error
 		store.InsertEntry(newEntry)
 	}
 }
 
-func entryPut() http.HandlerFunc {
+func entryPut(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		body := struct {
-			Weight string `json:"weight"`
-			Waist  string `json:"waist"`
-			BP     string `json:"bp"`
-		}{}
-
-		decoder := json.NewDecoder(r.Body)
-
-		if err := decoder.Decode(&body); err != nil {
-			log.Printf("Invalid edit entry request: %v", err)
-			http.Error(w, fmt.Sprintf("Invalid edit entry request: %v", err), http.StatusBadRequest)
+		updatedEntry, err := parse.ParseEntryPut(r)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Invalid entry update request: %v", err), http.StatusBadRequest)
 			return
 		}
 
-		log.Printf("Received %v", body)
+		// TODO - handle error
+		store.UpdateEntry(updatedEntry)
 	}
 }

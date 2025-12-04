@@ -65,9 +65,9 @@ newEntryForm.addEventListener("submit", (evt) => {
     <label for="date">Date</label>
     <input type="date" name="date" id="date" required/>
     <label for="weight">Weight</label>
-    <input type="number" name="weight" id="weight" required/>
+    <input type="number" name="weight" id="weight" step="0.1" required/>
     <label for="waist">Waist</label>
-    <input type="number" name="waist" id="waist"/>
+    <input type="number" name="waist" id="waist" step="0.1" />
     <label for="bp">BP</label>
     <input type="text" name="bp" id="bp"/>
     <input type="submit" value="Add"/>

@@ -50,6 +50,35 @@ func (s Store) GetEntries() ([]types.Entry, error) {
 	return entries, nil
 }
 
+func (s Store) GetEntry(entryDate time.Time) (types.Entry, error) {
+	query := `
+	SELECT id, date, weight, waist, bp, created, last_modified
+	FROM entry
+	WHERE date = ?
+	`
+
+	// TODO - what to do with this context
+	dateStr := formatTime(entryDate)
+	row := s.db.QueryRow(context.TODO(), query, dateStr)
+	var entryDTO types.EntryDTO
+	var date string
+
+	if err := row.Scan(&entryDTO.Id, &date, &entryDTO.Weight, &entryDTO.Waist, &entryDTO.Bp, &entryDTO.Created, &entryDTO.LastModified); err != nil {
+		return types.Entry{}, err
+	}
+	entryDate, err := parseTime(date)
+	if err != nil {
+		return types.Entry{}, err
+	}
+	entryDTO.Date = entryDate
+	entry, err := parse.ParseEntryDTO(entryDTO)
+	if err != nil {
+		return types.Entry{}, err
+	}
+
+	return entry, nil
+}
+
 func (s Store) InsertEntry(entry types.Entry) error {
 	insert := `
 	INSERT INTO entry
@@ -112,5 +141,71 @@ func (s Store) InsertEntry(entry types.Entry) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (s Store) UpdateEntry(entry types.Entry) error {
+	update := `
+	UPDATE entry
+	SET weight = ?, waist = ?, bp = ?, last_modified = ?
+	WHERE date = ?
+	`
+	now := formatTime(time.Now())
+	formatedTime := formatTime(entry.Date)
+
+	var weight sql.NullFloat64
+	if entry.Weight.Valid() {
+		weight = sql.NullFloat64{
+			Float64: *entry.Weight.Value,
+			Valid:   true,
+		}
+	} else {
+		weight = sql.NullFloat64{
+			Float64: 0,
+			Valid:   false,
+		}
+	}
+
+	var waist sql.NullFloat64
+	if entry.Waist.Valid() {
+		waist = sql.NullFloat64{
+			Float64: *entry.Waist.Value,
+			Valid:   true,
+		}
+	} else {
+		waist = sql.NullFloat64{
+			Float64: 0,
+			Valid:   false,
+		}
+	}
+
+	var bp sql.NullString
+	if entry.BP.Valid() {
+		bp = sql.NullString{
+			String: entry.BP.String(),
+			Valid:  true,
+		}
+	} else {
+		bp = sql.NullString{
+			String: "",
+			Valid:  false,
+		}
+	}
+
+	// TODO - what context?
+	_, err := s.db.Exec(
+		context.TODO(),
+		update,
+		weight,
+		waist,
+		bp,
+		now,
+		formatedTime,
+	)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

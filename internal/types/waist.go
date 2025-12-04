@@ -28,6 +28,13 @@ func (w Waist) String() string {
 	return fmt.Sprintf("%.1f", w.Float64())
 }
 
+func (w Waist) FormValue() string {
+	if w.isNil() {
+		return ""
+	}
+	return fmt.Sprintf("%g", *w.Value)
+}
+
 func NewWaist(val float64) Waist {
 	return Waist{Value: &val}
 }

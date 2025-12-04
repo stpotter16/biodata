@@ -14,7 +14,7 @@
             <td>{{ .Weight }}</td>
             <td>{{ .Waist }}</td>
             <td>{{ .BP }}</td>
-            <td><a href="/entry/{{ .Date }}/edit">Edit</a></td>
+            <td><a href="/entry/{{ formatDate .Date }}/edit">Edit</a></td>
         </tr>
         {{ end }}
     </table>

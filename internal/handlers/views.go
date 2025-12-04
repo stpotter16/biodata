@@ -28,7 +28,6 @@ func indexGet(store store.Store) http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		// TODO - handle error
 		entries, err := store.GetEntries()
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Could not read existing entries: %v", err), http.StatusInternalServerError)
@@ -54,7 +53,7 @@ func newEntryGet() http.HandlerFunc {
 	}
 }
 
-func editEntryGet() http.HandlerFunc {
+func editEntryGet(store store.Store) http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").
 			Funcs(funcMap).
@@ -62,6 +61,23 @@ func editEntryGet() http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/edit_entry.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		t.Execute(w, nil)
+		entryDateStr := r.PathValue("date")
+		entryDate, err := time.Parse("2006-01-02", entryDateStr)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not parse entry date: %v", err), http.StatusBadRequest)
+			return
+		}
+		entry, err := store.GetEntry(entryDate)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Could not read existing entries: %v", err), http.StatusInternalServerError)
+			return
+		}
+		if err = t.Execute(w, struct {
+			Entry types.Entry
+		}{
+			Entry: entry,
+		}); err != nil {
+			http.Error(w, fmt.Sprintf("Could not process template: %v", err), http.StatusInternalServerError)
+		}
 	}
 }

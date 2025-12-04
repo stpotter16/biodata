@@ -2,7 +2,6 @@
 Track basic biodata
 
 # Features
-- Add entries in new page
 - Edit entries in edit page
 - Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
 - Auth middleware
@@ -10,12 +9,13 @@ Track basic biodata
 - Nix module
 
 # Improvements
+- Tests (unit, integration) - dry it up
 - Install shellcheck
 - Build a shell linter
 - Install prettier
 - Build an html linter
 - index page: Add entry link is too big
-- Error handling - ties into logging (better types too)
+- Error handling - ties into logging (better types too). Frontend too
 - Centralized parsing (better types)
 - Favicon
 - Security (csp nonce, tokens, csrf)
