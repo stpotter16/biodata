@@ -21,4 +21,3 @@ Track basic biodata
 - Security (csp nonce, tokens, csrf)
 - Too much logging (log at lowest level only or whatever?)
 - All the TODOs
-- Ensuring per day entries are unique

@@ -27,7 +27,9 @@ func entryPost(store store.Store) http.HandlerFunc {
 		}
 
 		// TODO - handle error
-		store.InsertEntry(newEntry)
+		if err = store.InsertEntry(newEntry); err != nil {
+			http.Error(w, fmt.Sprintf("Could not add new entry: %v", err), http.StatusInternalServerError)
+		}
 	}
 }
 

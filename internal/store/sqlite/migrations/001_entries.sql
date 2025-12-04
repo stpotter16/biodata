@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS entry (
     id INTEGER PRIMARY KEY,
-    date TEXT NOT NULL,
+    date TEXT NOT NULL UNIQUE,
     weight REAL,
     waist REAL,
     bp TEXT,
