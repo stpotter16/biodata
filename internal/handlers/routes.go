@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/stpotter16/biodata/internal/handlers/authorization"
+	"github.com/stpotter16/biodata/internal/handlers/middleware"
 	"github.com/stpotter16/biodata/internal/handlers/sessions"
 	"github.com/stpotter16/biodata/internal/store"
 )
@@ -13,12 +14,17 @@ func addRoutes(
 	store store.Store,
 	sessionManager sessions.SessionManger,
 	authorizer authorization.Authorizer) {
+	// static
+	mux.Handle("GET /static/", http.StripPrefix("/static/", serveStaticFiles()))
+
 	// views
 	mux.HandleFunc("GET /login", loginGet())
-	mux.HandleFunc("GET /{$}", indexGet(store))
-	mux.HandleFunc("GET /entry/new", newEntryGet())
-	mux.HandleFunc("GET /entry/{date}/edit", editEntryGet(store))
-	mux.Handle("GET /static/", http.StripPrefix("/static/", serveStaticFiles()))
+
+	// views that need authentication
+	viewAuthRequired := middleware.NewViewAuthenticationRequiredMiddleware(sessionManager)
+	mux.Handle("GET /{$}", viewAuthRequired(indexGet(store)))
+	mux.Handle("GET /entry/new", viewAuthRequired(newEntryGet()))
+	mux.Handle("GET /entry/{date}/edit", viewAuthRequired(editEntryGet(store)))
 
 	// Auth
 	mux.HandleFunc("POST /login", loginPost(authorizer, sessionManager))

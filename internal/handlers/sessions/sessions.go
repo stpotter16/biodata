@@ -74,6 +74,15 @@ func (s SessionManger) PopulateSessionContext(r *http.Request) (context.Context,
 	return context.WithValue(r.Context(), SESSION_KEY, session), nil
 }
 
+func (s SessionManger) SessionFromContext(ctx context.Context) (Session, error) {
+	session, okay := ctx.Value(SESSION_KEY).(Session)
+	if !okay {
+		log.Printf("Unable to extract session from context")
+		return Session{}, errors.New("No session info in context")
+	}
+	return session, nil
+}
+
 func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 	cookie, err := s.readSessionCookie(r)
 	if err != nil {
