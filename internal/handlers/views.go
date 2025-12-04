@@ -20,6 +20,18 @@ var funcMap = template.FuncMap{
 	},
 }
 
+func loginGet() http.HandlerFunc {
+	t := template.Must(
+		template.New("base.html").
+			Funcs(funcMap).
+			ParseFS(
+				templateFS,
+				"templates/layouts/base.html", "templates/pages/login.html"))
+	return func(w http.ResponseWriter, r *http.Request) {
+		t.Execute(w, nil)
+	}
+}
+
 func indexGet(store store.Store) http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").

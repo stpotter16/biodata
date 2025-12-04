@@ -8,10 +8,13 @@ import (
 
 func addRoutes(mux *http.ServeMux, store store.Store) {
 	// views
+	mux.HandleFunc("GET /login", loginGet())
 	mux.HandleFunc("GET /{$}", indexGet(store))
 	mux.HandleFunc("GET /entry/new", newEntryGet())
 	mux.HandleFunc("GET /entry/{date}/edit", editEntryGet(store))
 	mux.Handle("GET /static/", http.StripPrefix("/static/", serveStaticFiles()))
+
+	// Auth
 
 	// API
 	mux.HandleFunc("GET /api/entries", entriesGet())
