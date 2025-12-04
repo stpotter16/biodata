@@ -37,7 +37,7 @@ func ReadSigned(r *http.Request, name string, secretKey string) (string, error) 
 		return "", ErrInvalidValue
 	}
 
-	return "", nil
+	return value, nil
 }
 
 func WriteSigned(w http.ResponseWriter, cookie http.Cookie, secretKey string) error {

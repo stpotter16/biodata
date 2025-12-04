@@ -15,7 +15,7 @@ func (s SessionManger) readSessionCookie(r *http.Request) (string, error) {
 }
 
 func (s SessionManger) writeSessionCookie(w http.ResponseWriter, session Session) error {
-	cookieVal := fmt.Sprintf("%s", session.ID)
+	cookieVal := fmt.Sprintf("%d::%s", session.UserId, session.ID)
 	cookie := http.Cookie{
 		Name:     SESSION_COOKIE,
 		Value:    cookieVal,

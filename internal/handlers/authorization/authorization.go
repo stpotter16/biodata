@@ -1,6 +1,10 @@
 package authorization
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/stpotter16/biodata/internal/types"
+)
 
 type Authorizer struct {
 	passphrase string
@@ -19,8 +23,8 @@ func New(getenv func(string) string) (Authorizer, error) {
 	return a, nil
 }
 
-func (a Authorizer) Authorize(passphrase string) bool {
-	if passphrase != a.passphrase {
+func (a Authorizer) Authorize(loginRequest types.LoginRequest) bool {
+	if loginRequest.Passphrase != a.passphrase {
 		return false
 	}
 	return true

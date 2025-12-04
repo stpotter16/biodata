@@ -14,8 +14,11 @@ import (
 const SESSION_KEY = "session"
 const SESSION_ENV_KEY = "BIODATA_SESSION_ENV_KEY"
 
+const DEFAULT_USER_ID = 1
+
 type Session struct {
-	ID string
+	ID     string
+	UserId uint8
 }
 
 type SessionManger struct {
@@ -42,7 +45,8 @@ func New(db db.DB, getenv func(string) string) (SessionManger, error) {
 func (s SessionManger) CreateSession(w http.ResponseWriter) error {
 	sessionId := uuid.NewString()
 	session := Session{
-		ID: sessionId,
+		ID:     sessionId,
+		UserId: DEFAULT_USER_ID,
 	}
 
 	if err := s.writeSessionCookie(w, session); err != nil {
@@ -91,6 +95,10 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 	}
 
 	cookieVals := strings.SplitN(cookie, "::", 2)
+	if len(cookieVals) != 2 {
+		log.Printf("Invalid cookie value: %s", cookie)
+		return Session{}, errors.New("Cookie is invalid")
+	}
 	cookieKey := cookieVals[0]
 	cookieToken := cookieVals[1]
 
