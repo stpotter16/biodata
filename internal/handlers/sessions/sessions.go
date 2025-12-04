@@ -11,7 +11,7 @@ func New(db db.DB) SessionManger {
 		db: &db,
 	}
 
-	//go s.sessionCleanup()
+	go s.sessionCleanup()
 
 	return s
 }
