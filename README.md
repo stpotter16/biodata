@@ -20,4 +20,5 @@ Track basic biodata
 - Favicon
 - Security (csp nonce, tokens, csrf)
 - Too much logging (log at lowest level only or whatever?)
+- Feature: Logging out
 - All the TODOs

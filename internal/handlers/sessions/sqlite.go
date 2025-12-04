@@ -7,6 +7,7 @@ import (
 )
 
 const CLEANUP_INTERVAL = 5 * time.Minute
+const SESSION_TTL = 60 * time.Minute
 
 func (s SessionManger) sessionCleanup() {
 	ticker := time.NewTicker(CLEANUP_INTERVAL)
@@ -21,7 +22,7 @@ func (s SessionManger) sessionCleanup() {
 func (s SessionManger) deleteExpiredSessions() error {
 	delete := `
 	DELETE FROM
-		sessions
+		session
 	WHERE
 		expires_at <= datetime('now', 'localtime')
 	`
@@ -49,4 +50,32 @@ func (s SessionManger) readSession(key string) ([]byte, error) {
 		return nil, err
 	}
 	return serializedSession, nil
+}
+
+func (s SessionManger) insertSession(key string, session []byte) error {
+	insert := `
+	INSERT OR REPLACE INTO
+		session
+	(
+		key,
+		value,
+		expires_at
+	)
+	VALUES (
+		?,
+		?,
+		?
+	)`
+	expires_time := time.Now().Add(SESSION_TTL).Format(time.RFC3339)
+
+	// TODO - what context?
+	_, err := s.db.Exec(
+		context.TODO(),
+		insert,
+		key,
+		session,
+		expires_time,
+	)
+
+	return err
 }

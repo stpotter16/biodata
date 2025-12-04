@@ -1,12 +1,15 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
+
+	"github.com/stpotter16/biodata/internal/handlers/sessions"
 )
 
-func loginPost() http.HandlerFunc {
+func loginPost(sessionManager sessions.SessionManger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Received: %s", r.Body)
+		// TODO - handle error
+		sessionManager.CreateSession(w)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 	}
 }

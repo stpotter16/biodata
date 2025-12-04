@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/stpotter16/biodata/internal/store/db"
 )
 
@@ -30,6 +31,30 @@ func New(db db.DB) SessionManger {
 	go s.sessionCleanup()
 
 	return s
+}
+
+func (s SessionManger) CreateSession(w http.ResponseWriter) error {
+	sessionId := uuid.NewString()
+	session := Session{
+		ID: sessionId,
+	}
+
+	if err := s.writeSessionCookie(w, session); err != nil {
+		log.Printf("Failed to set session cookie: %v", err)
+		return err
+	}
+
+	serializedSession, err := serializeSession(session)
+	if err != nil {
+		log.Printf("Failed to serialize session: %v", err)
+		return err
+	}
+
+	if err := s.insertSession(session.ID, serializedSession); err != nil {
+		log.Printf("Failed to save session: %v", err)
+		return err
+	}
+	return nil
 }
 
 func (s SessionManger) PopulateSessionContext(r *http.Request) (context.Context, error) {
