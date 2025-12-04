@@ -10,6 +10,7 @@ import (
 func NewServer(store store.Store) http.Handler {
 	mux := http.NewServeMux()
 	addRoutes(mux, store)
-	handler := middleware.LoggingWrapper(mux)
+	handler := middleware.PopulateSessionContext(mux)
+	handler = middleware.LoggingWrapper(handler)
 	return handler
 }
