@@ -38,7 +38,10 @@ func run(
 	if err != nil {
 		return err
 	}
-	sessionManager := sessions.New(db)
+	sessionManager, err := sessions.New(db, getenv)
+	if err != nil {
+		return err
+	}
 
 	handler := handlers.NewServer(store, sessionManager)
 	server := &http.Server{
@@ -69,7 +72,7 @@ func main() {
 	if err := run(
 		ctx,
 		nil,
-		nil,
+		os.Getenv,
 		nil,
 		os.Stdout,
 		os.Stderr,

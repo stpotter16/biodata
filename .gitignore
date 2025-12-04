@@ -36,3 +36,6 @@ go.work.sum
 biodata.sqlite
 biodata.sqlite-shm
 biodata.sqlite-wal
+
+# Environment variables
+.env

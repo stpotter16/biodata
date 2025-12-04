@@ -12,6 +12,7 @@ import (
 )
 
 const SESSION_KEY = "session"
+const SESSION_ENV_KEY = "SESSION_ENV_KEY"
 
 type Session struct {
 	ID string
@@ -22,15 +23,20 @@ type SessionManger struct {
 	sessionHmacSecretKey string
 }
 
-func New(db db.DB) SessionManger {
+func New(db db.DB, getenv func(string) string) (SessionManger, error) {
+	hmacSecret := getenv(SESSION_ENV_KEY)
+	if hmacSecret == "" {
+		return SessionManger{}, errors.New("Could not locate HMAC secret key")
+	}
+
 	s := SessionManger{
 		db:                   &db,
-		sessionHmacSecretKey: "secret", // TODO - fixme
+		sessionHmacSecretKey: hmacSecret,
 	}
 
 	go s.sessionCleanup()
 
-	return s
+	return s, nil
 }
 
 func (s SessionManger) CreateSession(w http.ResponseWriter) error {
