@@ -3,11 +3,16 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/stpotter16/biodata/internal/handlers/authorization"
 	"github.com/stpotter16/biodata/internal/handlers/sessions"
 	"github.com/stpotter16/biodata/internal/store"
 )
 
-func addRoutes(mux *http.ServeMux, store store.Store, sessionManager sessions.SessionManger) {
+func addRoutes(
+	mux *http.ServeMux,
+	store store.Store,
+	sessionManager sessions.SessionManger,
+	authorizer authorization.Authorizer) {
 	// views
 	mux.HandleFunc("GET /login", loginGet())
 	mux.HandleFunc("GET /{$}", indexGet(store))
@@ -16,7 +21,7 @@ func addRoutes(mux *http.ServeMux, store store.Store, sessionManager sessions.Se
 	mux.Handle("GET /static/", http.StripPrefix("/static/", serveStaticFiles()))
 
 	// Auth
-	mux.HandleFunc("POST /login", loginPost(sessionManager))
+	mux.HandleFunc("POST /login", loginPost(authorizer, sessionManager))
 
 	// API
 	mux.HandleFunc("GET /api/entries", entriesGet())

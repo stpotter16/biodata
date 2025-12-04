@@ -12,7 +12,7 @@ import (
 )
 
 const SESSION_KEY = "session"
-const SESSION_ENV_KEY = "SESSION_ENV_KEY"
+const SESSION_ENV_KEY = "BIODATA_SESSION_ENV_KEY"
 
 type Session struct {
 	ID string

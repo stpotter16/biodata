@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/stpotter16/biodata/internal/handlers"
+	"github.com/stpotter16/biodata/internal/handlers/authorization"
 	"github.com/stpotter16/biodata/internal/handlers/sessions"
 	"github.com/stpotter16/biodata/internal/store/db"
 	"github.com/stpotter16/biodata/internal/store/sqlite"
@@ -42,8 +43,12 @@ func run(
 	if err != nil {
 		return err
 	}
+	authorizer, err := authorization.New(getenv)
+	if err != nil {
+		return err
+	}
 
-	handler := handlers.NewServer(store, sessionManager)
+	handler := handlers.NewServer(store, sessionManager, authorizer)
 	server := &http.Server{
 		Addr:    ":8080",
 		Handler: handler,
