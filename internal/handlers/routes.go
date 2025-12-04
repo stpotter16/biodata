@@ -15,6 +15,7 @@ func addRoutes(mux *http.ServeMux, store store.Store) {
 	mux.Handle("GET /static/", http.StripPrefix("/static/", serveStaticFiles()))
 
 	// Auth
+	mux.HandleFunc("POST /login", loginPost())
 
 	// API
 	mux.HandleFunc("GET /api/entries", entriesGet())
