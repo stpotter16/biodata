@@ -10,6 +10,12 @@ func PopulateSessionContext(
 	sessionManager sessions.SessionManger,
 	next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		next.ServeHTTP(w, r)
+		sessionCtx, err := sessionManager.PopulateSessionContext(r)
+		if err != nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		next.ServeHTTP(w, r.WithContext(sessionCtx))
 	})
 }
