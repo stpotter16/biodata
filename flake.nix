@@ -106,7 +106,7 @@
 
       formatter = gopkg.alejandra;
     }))
-    {
+    // {
       nixosModules.default = nixosModule;
     };
 }
