@@ -13,5 +13,8 @@ server/live:
 server/lint:
 	./dev-scripts/lint-server.sh
 
+server/release:
+	./dev-scripts/build-release-server.sh
+
 secrets/hmac:
 	xxd -l32 /dev/urandom | xxd -r -ps | base64 | tr -d = | tr + - | tr / _
