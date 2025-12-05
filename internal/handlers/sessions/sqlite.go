@@ -47,12 +47,13 @@ func (s SessionManger) readSession(key string) ([]byte, error) {
 	row := s.db.QueryRow(context.TODO(), query, key)
 	var serializedSession []byte
 	if err := row.Scan(&serializedSession); err != nil {
+		log.Printf("Session key '%s' is invalid", key)
 		return nil, err
 	}
 	return serializedSession, nil
 }
 
-func (s SessionManger) insertSession(key string, session []byte) error {
+func (s SessionManger) insertSession(key uint8, session []byte) error {
 	insert := `
 	INSERT OR REPLACE INTO
 		session

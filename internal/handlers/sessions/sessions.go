@@ -60,7 +60,7 @@ func (s SessionManger) CreateSession(w http.ResponseWriter) error {
 		return err
 	}
 
-	if err := s.insertSession(session.ID, serializedSession); err != nil {
+	if err := s.insertSession(session.UserId, serializedSession); err != nil {
 		log.Printf("Failed to save session: %v", err)
 		return err
 	}
@@ -105,12 +105,12 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 	serializedSession, err := s.readSession(cookieKey)
 	if err != nil {
 		log.Printf("Failed to load session data: %v", err)
-		return Session{}, nil
+		return Session{}, err
 	}
 
 	session, err := deserializeSession(serializedSession)
 	if err != nil {
-		return Session{}, nil
+		return Session{}, err
 	}
 
 	if cookieToken != session.ID {

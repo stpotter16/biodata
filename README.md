@@ -20,5 +20,6 @@ Track basic biodata
 - Favicon
 - Security (csp nonce, tokens, csrf)
 - Too much logging (log at lowest level only or whatever?)
-- Feature: Logging out
+- Feature: Signing out
 - All the TODOs
+- Clean up Waist, Weight, BP string formatting to use %g
