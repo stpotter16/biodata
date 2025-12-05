@@ -31,6 +31,12 @@
           default = 8080;
           description = "Port to listen on";
         };
+
+        dbPath = lib.mkOption {
+          type = lib.types.str;
+          default = "/var/lib/biodata";
+          description = "DB path for biodata service";
+        };
       };
 
       config = lib.mkIf config.services.biodata.enable {
@@ -46,6 +52,7 @@
           };
           environment = {
             PORT = toString config.services.biodata.port;
+            BIODATA_DB_PATH = toString config.services.biodata.dbPath;
           };
         };
       };

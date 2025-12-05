@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -9,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"time"
 
 	"github.com/stpotter16/biodata/internal/handlers"
@@ -31,16 +31,14 @@ func run(
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	homePath, err := os.UserHomeDir()
-	if err != nil {
-		return err
+	dbPath := getenv("BIODATA_DB_PATH")
+	if dbPath == "" {
+		return errors.New("Database environment variable not set")
 	}
-	defaultDbPath := filepath.Join(homePath, "/data/biodata")
-	dbPath := flag.String("db", defaultDbPath, "Application database directory")
 	flag.Parse()
 
-	log.Printf("Opening database in %v", *dbPath)
-	db, err := db.New(*dbPath)
+	log.Printf("Opening database in %v", dbPath)
+	db, err := db.New(dbPath)
 	if err != nil {
 		return err
 	}
