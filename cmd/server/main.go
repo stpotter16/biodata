@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"time"
 
 	"github.com/stpotter16/biodata/internal/handlers"
@@ -29,20 +31,30 @@ func run(
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	dbPath := "biodata.sqlite"
-	log.Printf("Opening database at %v", dbPath)
-	db, err := db.New(dbPath)
+	homePath, err := os.UserHomeDir()
 	if err != nil {
 		return err
 	}
+	defaultDbPath := filepath.Join(homePath, "/data/biodata")
+	dbPath := flag.String("db", defaultDbPath, "Application database directory")
+	flag.Parse()
+
+	log.Printf("Opening database in %v", *dbPath)
+	db, err := db.New(*dbPath)
+	if err != nil {
+		return err
+	}
+
 	store, err := sqlite.New(db)
 	if err != nil {
 		return err
 	}
+
 	sessionManager, err := sessions.New(db, getenv)
 	if err != nil {
 		return err
 	}
+
 	authorizer, err := authorization.New(getenv)
 	if err != nil {
 		return err
@@ -76,7 +88,7 @@ func main() {
 	ctx := context.Background()
 	if err := run(
 		ctx,
-		nil,
+		os.Args,
 		os.Getenv,
 		nil,
 		os.Stdout,

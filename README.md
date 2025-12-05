@@ -2,8 +2,8 @@
 Track basic biodata
 
 # Features
-- Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
 - Set db as path
+- Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
 - Nix module
 
 # Improvements
@@ -22,3 +22,5 @@ Track basic biodata
 - Feature: Signing out
 - All the TODOs
 - Clean up Waist, Weight, BP string formatting to use %g
+- Feature: API get routes
+  - Will need encoding

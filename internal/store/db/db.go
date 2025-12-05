@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"os"
+	"path/filepath"
 	"runtime"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -14,7 +16,12 @@ type DB struct {
 	readDB  *sql.DB
 }
 
-func New(dbPath string) (DB, error) {
+func New(directory string) (DB, error) {
+	if err := ensureDirectorExists(directory); err != nil {
+		return DB{}, err
+	}
+
+	dbPath := filepath.Join(directory, "biodata.sqlite")
 	readDB, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		log.Printf("Could not open read db: %v", err)
@@ -100,6 +107,15 @@ func applyPragmas(db *sql.DB) error {
 		PRAGMA temp_store = memory;
 	`); err != nil {
 		return err
+	}
+	return nil
+}
+
+func ensureDirectorExists(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		if err := os.MkdirAll(path, os.ModePerm); err != nil {
+			return err
+		}
 	}
 	return nil
 }
