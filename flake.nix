@@ -8,7 +8,7 @@
     go-nixpkgs.url = "github:NixOS/nixpkgs/01b6809f7f9d1183a2b3e081f0a1e6f8f415cb09";
 
     # 3.50.4 release
-    sqlite-nixpkgs.url="github:NixOS/nixpkgs/6f374686605df381de8541c072038472a5ea2e2d";
+    sqlite-nixpkgs.url = "github:NixOS/nixpkgs/6f374686605df381de8541c072038472a5ea2e2d";
   };
 
   outputs = {
@@ -16,8 +16,42 @@
     flake-utils,
     go-nixpkgs,
     sqlite-nixpkgs,
-  } @ inputs:
-    flake-utils.lib.eachDefaultSystem (system: let
+  }: let
+    nixosModule = {
+      config,
+      lib,
+      pkgs,
+      ...
+    }: {
+      options.services.biodata = {
+        enable = lib.mkEnableOption "Biodata";
+
+        port = lib.mkOption {
+          type = lib.types.port;
+          default = 8080;
+          description = "Port to listen on";
+        };
+      };
+
+      config = lib.mkIf config.services.biodata.enable {
+        systemd.services.biodata = {
+          description = "Biodata web service";
+          wantedBy = ["multi-user.target"];
+          after = ["network.target"];
+          serviceConfig = {
+            ExecStart = "${self.packages.${pkgs.system}.default}/bin/server";
+            Restart = "always";
+            Type = "simple";
+            DynamicUser = "yes";
+          };
+          environment = {
+            PORT = toString config.services.biodata.port;
+          };
+        };
+      };
+    };
+  in
+    (flake-utils.lib.eachDefaultSystem (system: let
       gopkg = go-nixpkgs.legacyPackages.${system};
       go = gopkg.go_1_25;
       sqlite = sqlite-nixpkgs.legacyPackages.${system}.sqlite;
@@ -32,8 +66,8 @@
         subPackages = ["cmd/server"];
 
         ldflags = [
-          "-s"  # Strip symbol table
-          "-w"  # Strip DWARF debugging info
+          "-s" # Strip symbol table
+          "-w" # Strip DWARF debugging info
         ];
 
         tags = ["sqlite_omit_load_extension"];
@@ -71,5 +105,8 @@
       };
 
       formatter = gopkg.alejandra;
-    });
+    }))
+    {
+      nixosModules.default = nixosModule;
+    };
 }
