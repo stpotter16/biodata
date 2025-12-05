@@ -8,7 +8,7 @@ set -u
 
 # Configuration
 NIXOS_CONFIG_DIR="${NIXOS_CONFIG_DIR:-$HOME/development/nixos-config}"
-TARGET_HOST="${TARGET_HOST:-}"
+TARGET_HOST="${TARGET_HOST:porphyrion}"
 HOSTNAME="${HOSTNAME:-porphyrion}"
 
 # Colors for output
