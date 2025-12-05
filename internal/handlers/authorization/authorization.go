@@ -24,8 +24,15 @@ func New(getenv func(string) string) (Authorizer, error) {
 }
 
 func (a Authorizer) Authorize(loginRequest types.LoginRequest) bool {
-	if loginRequest.Passphrase != a.passphrase {
-		return false
+	if loginRequest.Passphrase == a.passphrase {
+		return true
 	}
-	return true
+	return false
+}
+
+func (a Authorizer) AuthorizeApi(headerVal string) bool {
+	if headerVal == a.passphrase {
+		return true
+	}
+	return false
 }

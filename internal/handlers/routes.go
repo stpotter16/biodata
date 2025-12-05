@@ -30,8 +30,9 @@ func addRoutes(
 	mux.HandleFunc("POST /login", loginPost(authorizer, sessionManager))
 
 	// API
-	mux.HandleFunc("GET /api/entries", entriesGet())
-	mux.HandleFunc("GET /api/entries/{date}", entryGet())
-	mux.HandleFunc("POST /api/entry", entryPost(store))
-	mux.HandleFunc("PUT /api/entries/{date}", entryPut(store))
+	apiAuthRequired := middleware.NewApiAuthenticationRequiredMiddleware(sessionManager, authorizer)
+	mux.Handle("GET /api/entries", apiAuthRequired(entriesGet()))
+	mux.Handle("GET /api/entries/{date}", apiAuthRequired(entryGet()))
+	mux.Handle("POST /api/entry", apiAuthRequired(entryPost(store)))
+	mux.Handle("PUT /api/entries/{date}", apiAuthRequired(entryPut(store)))
 }

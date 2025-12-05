@@ -3,8 +3,11 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/stpotter16/biodata/internal/handlers/authorization"
 	"github.com/stpotter16/biodata/internal/handlers/sessions"
 )
+
+const AUTH_HEADER = "X-BIODATA-AUTH"
 
 func NewViewAuthenticationRequiredMiddleware(sessionManager sessions.SessionManger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -18,4 +21,26 @@ func NewViewAuthenticationRequiredMiddleware(sessionManager sessions.SessionMang
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+func NewApiAuthenticationRequiredMiddleware(sessionManager sessions.SessionManger, authorizer authorization.Authorizer) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Try cookies first, fall back to a header if not present
+			_, sessionErr := sessionManager.PopulateSessionContext(r)
+			authHeader := extractAuthHeader(r)
+			authorizedHeader := authorizer.AuthorizeApi(authHeader)
+
+			if sessionErr != nil && !authorizedHeader {
+				http.Error(w, "Unauthorized request", http.StatusUnauthorized)
+				return
+			}
+
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func extractAuthHeader(r *http.Request) string {
+	return r.Header.Get(AUTH_HEADER)
 }

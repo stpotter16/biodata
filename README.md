@@ -2,7 +2,6 @@
 Track basic biodata
 
 # Features
-- Auth middleware
 - Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
 - Set db as path
 - Nix module
