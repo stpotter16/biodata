@@ -2,9 +2,8 @@
 Track basic biodata
 
 # Features
-- Set db as path
-- Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
 - Nix module
+- Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
 
 # Improvements
 - Tests (unit, integration) - dry it up

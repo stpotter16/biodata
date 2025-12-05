@@ -61,8 +61,13 @@ func run(
 	}
 
 	handler := handlers.NewServer(store, sessionManager, authorizer)
+	port := getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	addr := ":" + port
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    addr,
 		Handler: handler,
 	}
 
