@@ -22,6 +22,31 @@
       go = gopkg.go_1_25;
       sqlite = sqlite-nixpkgs.legacyPackages.${system}.sqlite;
     in {
+      packages.default = gopkg.buildGoModule {
+        pname = "biodata";
+        version = "0.1.0";
+        src = ./.;
+        vendorHash = "sha256-Mup97NYB1m28OUeVyD0RKsuSN7tblDjajr8pRzWfvAo=";
+
+        # Build configuration matching Makefile
+        subPackages = ["cmd/server"];
+
+        ldflags = [
+          "-s"  # Strip symbol table
+          "-w"  # Strip DWARF debugging info
+        ];
+
+        tags = ["sqlite_omit_load_extension"];
+
+        # SQLite requires CGO (enabled automatically via buildInputs)
+        buildInputs = [sqlite];
+      };
+
+      apps.default = {
+        type = "app";
+        program = "${self.packages.${system}.default}/bin/server";
+      };
+
       devShells.default = gopkg.mkShell {
         packages = [
           gopkg.gotools

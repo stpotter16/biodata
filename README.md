@@ -7,6 +7,7 @@ Track basic biodata
 
 # Improvements
 - Tests (unit, integration) - dry it up
+  - Need test runners too. Good examples abound here
 - Install shellcheck
 - Build a shell linter
 - Install prettier
