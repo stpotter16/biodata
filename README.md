@@ -1,26 +1,39 @@
 # biodata
 Track basic biodata
 
-# Features
-- Nix module
-- Env secret for passphrase. See [this article](https://michael.stapelberg.ch/posts/2025-08-24-secret-management-with-sops-nix/)
+# Bugs
+## Session Tracking
+This does not seem to be working correctly. Mobile sessions have persisted long after they should
+
+What could be happening here:
+- The session table should be keyed off the session id, not user id
+- That does not explain why the session.ID check is failing
 
 # Improvements
+## Tests
 - Tests (unit, integration) - dry it up
   - Need test runners too. Good examples abound here
+## Linting
 - Install shellcheck
 - Build a shell linter
 - Install prettier
 - Build an html linter
-- index page: Add entry link is too big
+## Clean up
+- All the TODOs
+- Clean up Waist, Weight, BP string formatting to use %g
+## Logging
+- Too much logging (log at lowest level only or whatever?)
+## Error handling
 - Error handling
   - ties into logging (better types too).
   - Frontend too
-- Favicon
+## Security
 - Security (csp nonce, tokens, csrf)
-- Too much logging (log at lowest level only or whatever?)
-- Feature: Signing out
-- All the TODOs
-- Clean up Waist, Weight, BP string formatting to use %g
-- Feature: API get routes
+
+# Features
+- Signing out
+- API get routes
   - Will need encoding
+- index page: Add entry link is too big
+- Favicon
+
