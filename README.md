@@ -1,6 +1,11 @@
 # biodata
 Track basic biodata
 
+# Litestream
+- Install
+- Configure
+- Tooling to download locally
+
 # Bugs
 ## Session Tracking
 This does not seem to be working correctly. Mobile sessions have persisted long after they should
@@ -31,9 +36,10 @@ What could be happening here:
 - Security (csp nonce, tokens, csrf)
 
 # Features
+- index page: Add entry link is too big
+- Favicon
+- Update the page title to biotrak
 - Signing out
 - API get routes
   - Will need encoding
-- index page: Add entry link is too big
-- Favicon
 
