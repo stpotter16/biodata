@@ -9,12 +9,14 @@ What could be happening here:
 - The session table should be keyed off the session id, not user id
 - That does not explain why the session.ID check is failing
 
+## SQL linting issues
+What do here?
+
 # Improvements
 ## Tests
 - Tests (unit, integration) - dry it up
   - Need test runners too. Good examples abound here
 ## Linting
-- Lint sql
 - Install prettier
 - Build an html linter
 ## Clean up
