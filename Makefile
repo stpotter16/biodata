@@ -10,9 +10,6 @@ server/run: server/build
 server/live:
 	./dev-scripts/serve.sh
 
-server/lint:
-	./dev-scripts/lint-server.sh
-
 server/release:
 	./dev-scripts/build-release-server.sh
 
@@ -21,3 +18,10 @@ server/deploy:
 
 secrets/hmac:
 	xxd -l32 /dev/urandom | xxd -r -ps | base64 | tr -d = | tr + - | tr / _
+
+
+lint/go:
+	./dev-scripts/lint-server.sh
+
+lint/shell:
+	./dev-scripts/check-shell.sh

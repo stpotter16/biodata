@@ -12,6 +12,9 @@
 
     # 0.3.13 release
     litestream-nixpkgs.url = "github:NixOS/nixpkgs/ee09932cedcef15aaf476f9343d1dea2cb77e261";
+
+    # 0.11.0 release
+    shellcheck-nixpkgs.url = "github:NixOS/nixpkgs/ee09932cedcef15aaf476f9343d1dea2cb77e261";
   };
 
   outputs = {
@@ -20,12 +23,14 @@
     go-nixpkgs,
     sqlite-nixpkgs,
     litestream-nixpkgs,
+    shellcheck-nixpkgs,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       gopkg = go-nixpkgs.legacyPackages.${system};
       go = gopkg.go_1_25;
       sqlite = sqlite-nixpkgs.legacyPackages.${system}.sqlite;
       litestream = litestream-nixpkgs.legacyPackages.${system}.litestream;
+      shellcheck = shellcheck-nixpkgs.legacyPackages.${system}.shellcheck;
     in {
       packages.default = gopkg.buildGoModule {
         pname = "biodata";
@@ -64,6 +69,7 @@
           go
           sqlite
           litestream
+          shellcheck
         ];
 
         shellHook = ''
@@ -74,6 +80,7 @@
           go version
           echo "sqlite" "$(sqlite3 --version | cut -d ' ' -f 1-2)"
           echo "litestream" "$(litestream version)"
+          echo "shellcheck" "$(shellcheck --version | grep '^version:')"
         '';
       };
 

@@ -1,11 +1,6 @@
 # biodata
 Track basic biodata
 
-# Litestream
-- Install
-- Configure
-- Tooling to download locally
-
 # Bugs
 ## Session Tracking
 This does not seem to be working correctly. Mobile sessions have persisted long after they should
@@ -19,8 +14,7 @@ What could be happening here:
 - Tests (unit, integration) - dry it up
   - Need test runners too. Good examples abound here
 ## Linting
-- Install shellcheck
-- Build a shell linter
+- Lint sql
 - Install prettier
 - Build an html linter
 ## Clean up
@@ -28,6 +22,7 @@ What could be happening here:
 - Clean up Waist, Weight, BP string formatting to use %g
 ## Logging
 - Too much logging (log at lowest level only or whatever?)
+- Custom handler to log out response status code
 ## Error handling
 - Error handling
   - ties into logging (better types too).
