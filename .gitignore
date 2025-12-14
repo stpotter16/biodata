@@ -41,3 +41,6 @@ biodata.sqlite-wal
 
 # Environment variables
 .env
+
+# Frontend stuff
+node_modules/

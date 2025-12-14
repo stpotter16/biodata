@@ -10,15 +10,23 @@ What could be happening here:
 - That does not explain why the session.ID check is failing
 
 ## SQL linting issues
-What do here?
+Rename keys on new tables and push data over. Drop old tables
+
+## HTML linting issues
+Maybe just fix with `npx prettier . --write`
+
+# Features
+- index page: Add entry link is too big
+- Favicon
+- Update the page title to biotrak
+- Signing out
+- API get routes
+  - Will need encoding
 
 # Improvements
 ## Tests
 - Tests (unit, integration) - dry it up
   - Need test runners too. Good examples abound here
-## Linting
-- Install prettier
-- Build an html linter
 ## Clean up
 - All the TODOs
 - Clean up Waist, Weight, BP string formatting to use %g
@@ -32,11 +40,4 @@ What do here?
 ## Security
 - Security (csp nonce, tokens, csrf)
 
-# Features
-- index page: Add entry link is too big
-- Favicon
-- Update the page title to biotrak
-- Signing out
-- API get routes
-  - Will need encoding
 
