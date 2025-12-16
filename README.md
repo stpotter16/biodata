@@ -2,17 +2,6 @@
 
 Track basic biodata
 
-# Bugs
-
-## Session Tracking
-
-This does not seem to be working correctly. Mobile sessions have persisted long after they should
-
-What could be happening here:
-
-- The session table should be keyed off the session id, not user id
-- That does not explain why the session.ID check is failing
-
 # Features
 
 - API get routes

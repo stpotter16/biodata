@@ -39,7 +39,7 @@ func (s SessionManger) readSession(key string) ([]byte, error) {
 	FROM
 		session
 	WHERE
-		key = ? AND
+		session_key = ? AND
 		expires_at >= datetime('now', 'localtime')
 	`
 
@@ -53,12 +53,12 @@ func (s SessionManger) readSession(key string) ([]byte, error) {
 	return serializedSession, nil
 }
 
-func (s SessionManger) insertSession(key uint8, session []byte) error {
+func (s SessionManger) insertSession(key string, session []byte) error {
 	insert := `
 	INSERT OR REPLACE INTO
 		session
 	(
-		key,
+		session_key,
 		value,
 		expires_at
 	)

@@ -60,7 +60,7 @@ func (s SessionManger) CreateSession(w http.ResponseWriter) error {
 		return err
 	}
 
-	if err := s.insertSession(session.UserId, serializedSession); err != nil {
+	if err := s.insertSession(session.ID, serializedSession); err != nil {
 		log.Printf("Failed to save session: %v", err)
 		return err
 	}
@@ -99,10 +99,9 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 		log.Printf("Invalid cookie value: %s", cookie)
 		return Session{}, errors.New("Cookie is invalid")
 	}
-	cookieKey := cookieVals[0]
 	cookieToken := cookieVals[1]
 
-	serializedSession, err := s.readSession(cookieKey)
+	serializedSession, err := s.readSession(cookieToken)
 	if err != nil {
 		log.Printf("Failed to load session data: %v", err)
 		return Session{}, err
