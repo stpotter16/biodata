@@ -13,7 +13,7 @@ func (s Store) GetEntries() ([]types.Entry, error) {
 	query := `
 	SELECT id, date, weight, waist, bp, created, last_modified
 	FROM entry
-	ORDER BY id ASC;
+	ORDER BY id DESC;
 	`
 
 	// TODO - what to do with this context
