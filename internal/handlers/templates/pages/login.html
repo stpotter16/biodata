@@ -1,64 +1,60 @@
-{{ define "title" }}
-    Login
-{{ end }}
-{{ define "script-tags" }}
+{{ define "title" }} Login {{ end }} {{ define "script-tags" }}
 <script type="module">
-const loginForm = document.getElementById("login");
+  const loginForm = document.getElementById("login");
 
-function setLoginFormState(isEnabled) {
+  function setLoginFormState(isEnabled) {
     document.querySelectorAll("#login input").forEach((el) => {
-        el.disabled = !isEnabled;
+      el.disabled = !isEnabled;
     });
-}
+  }
 
-function disableLoginForm() {
+  function disableLoginForm() {
     setLoginFormState(false);
-};
+  }
 
-function enableLoginForm() {
+  function enableLoginForm() {
     setLoginFormState(true);
-};
+  }
 
-async function login(passphrase) {
+  async function login(passphrase) {
     return fetch("/login", {
-        method: "POST",
-        mode: "same-origin",
-        credentials: "include",
-        cache: "no-cache",
-        redirect: "error",
-        body: JSON.stringify({
-            passphrase: passphrase,
-        }),
+      method: "POST",
+      mode: "same-origin",
+      credentials: "include",
+      cache: "no-cache",
+      redirect: "error",
+      body: JSON.stringify({
+        passphrase: passphrase,
+      }),
     }).then((response) => {
-        if (!response.ok) {
-            return response.text().then((error) => {
-                return Promise.reject(error);
-            })
-        }
-        return Promise.resolve();
+      if (!response.ok) {
+        return response.text().then((error) => {
+          return Promise.reject(error);
+        });
+      }
+      return Promise.resolve();
     });
-}
+  }
 
-loginForm.addEventListener("submit", (evt) => {
+  loginForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
     const passphrase = document.getElementById("passphrase").value;
-    disableLoginForm()
+    disableLoginForm();
     login(passphrase)
-        .then(() => {
-            document.location = "/";
-        })
-        .catch((error) => {
-            enableLoginForm();
-            console.log(error);
-        });
-});
+      .then(() => {
+        document.location = "/";
+      })
+      .catch((error) => {
+        enableLoginForm();
+        console.log(error);
+      });
+  });
 </script>
-{{ end }}
-{{ define "content" }}
+{{ end }} {{ define "content" }}
 <h1>Login</h1>
 <form id="login">
-    <label for="passphrase">Passphrase</label>
-    <input type="password" name="passphrase" id="passphrase"/>
-    <input type="submit" value="Login"/>
+  <label for="passphrase">Passphrase</label>
+  <input type="password" name="passphrase" id="passphrase" />
+  <input type="submit" value="Login" />
 </form>
 {{ end }}

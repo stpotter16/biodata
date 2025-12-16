@@ -1,75 +1,71 @@
-{{ define "title" }}
-    Add Entry
-{{ end }}
-{{ define "script-tags" }}
+{{ define "title" }} Add Entry {{ end }} {{ define "script-tags" }}
 <script type="module">
-const newEntryForm = document.getElementById("new-entry");
+  const newEntryForm = document.getElementById("new-entry");
 
-function setNewEntryFormState(isEnabled) {
+  function setNewEntryFormState(isEnabled) {
     document.querySelectorAll("#new-entry input").forEach((el) => {
-        el.disabled = !isEnabled;
+      el.disabled = !isEnabled;
     });
-}
+  }
 
-function disableNewEntryForm() {
+  function disableNewEntryForm() {
     setNewEntryFormState(false);
-};
+  }
 
-function enableNewEntryForm() {
+  function enableNewEntryForm() {
     setNewEntryFormState(true);
-};
+  }
 
-async function newEntry(date, weight, waist, bp) {
+  async function newEntry(date, weight, waist, bp) {
     return fetch("/api/entry", {
-        method: "POST",
-        mode: "same-origin",
-        credentials: "include",
-        cache: "no-cache",
-        redirect: "error",
-        body: JSON.stringify({
-            date: date,
-            weight: weight,
-            waist: waist,
-            bp: bp
-        }),
+      method: "POST",
+      mode: "same-origin",
+      credentials: "include",
+      cache: "no-cache",
+      redirect: "error",
+      body: JSON.stringify({
+        date: date,
+        weight: weight,
+        waist: waist,
+        bp: bp,
+      }),
     }).then((response) => {
-        if (!response.ok) {
-            return response.text().then((error) => {
-                return Promise.reject(error);
-            })
-        }
-        return Promise.resolve();
+      if (!response.ok) {
+        return response.text().then((error) => {
+          return Promise.reject(error);
+        });
+      }
+      return Promise.resolve();
     });
-}
+  }
 
-newEntryForm.addEventListener("submit", (evt) => {
+  newEntryForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
     const date = document.getElementById("date").value;
     const weight = document.getElementById("weight").value;
     const waist = document.getElementById("waist").value;
     const bp = document.getElementById("bp").value;
-    disableNewEntryForm()
+    disableNewEntryForm();
     newEntry(date, weight, waist, bp)
-        .then(() => {
-            document.location = "/";
-        })
-        .catch((error) => {
-            enableNewEntryForm();
-            console.log(error);
-        });
-});
+      .then(() => {
+        document.location = "/";
+      })
+      .catch((error) => {
+        enableNewEntryForm();
+        console.log(error);
+      });
+  });
 </script>
-{{ end }}
-{{ define "content" }}
+{{ end }} {{ define "content" }}
 <form id="new-entry">
-    <label for="date">Date</label>
-    <input type="date" name="date" id="date" required/>
-    <label for="weight">Weight</label>
-    <input type="number" name="weight" id="weight" step="0.1" required/>
-    <label for="waist">Waist</label>
-    <input type="number" name="waist" id="waist" step="0.1" />
-    <label for="bp">BP</label>
-    <input type="text" name="bp" id="bp"/>
-    <input type="submit" value="Add"/>
+  <label for="date">Date</label>
+  <input type="date" name="date" id="date" required />
+  <label for="weight">Weight</label>
+  <input type="number" name="weight" id="weight" step="0.1" required />
+  <label for="waist">Waist</label>
+  <input type="number" name="waist" id="waist" step="0.1" />
+  <label for="bp">BP</label>
+  <input type="text" name="bp" id="bp" />
+  <input type="submit" value="Add" />
 </form>
 {{ end }}

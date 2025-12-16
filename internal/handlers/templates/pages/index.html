@@ -1,25 +1,24 @@
-{{ define "content" }}
-    {{ if .Entries }}
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Weight</th>
-            <th>Waist</th>
-            <th>BP</th>
-            <th>Actions</th>
-        </tr>
-        {{ range .Entries }}
-        <tr>
-            <td>{{ formatDate .Date }}</td>
-            <td>{{ .Weight }}</td>
-            <td>{{ .Waist }}</td>
-            <td>{{ .BP }}</td>
-            <td><a href="/entry/{{ formatDate .Date }}/edit">Edit</a></td>
-        </tr>
-        {{ end }}
-    </table>
-    {{ else }}
-        <h2>No entries yet. Add one!</h2>
-    {{ end }}
+{{ define "content" }} {{ if .Entries }}
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Weight</th>
+    <th>Waist</th>
+    <th>BP</th>
+    <th>Actions</th>
+  </tr>
+  {{ range .Entries }}
+  <tr>
+    <td>{{ formatDate .Date }}</td>
+    <td>{{ .Weight }}</td>
+    <td>{{ .Waist }}</td>
+    <td>{{ .BP }}</td>
+    <td><a href="/entry/{{ formatDate .Date }}/edit">Edit</a></td>
+  </tr>
+  {{ end }}
+</table>
+{{ else }}
+<h2>No entries yet. Add one!</h2>
+{{ end }}
 <div><a href="/entry/new">Add entry</a></div>
 {{ end }}
