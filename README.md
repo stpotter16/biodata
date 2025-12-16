@@ -17,11 +17,11 @@ Maybe just fix with `npx prettier . --write`
 
 # Features
 - index page: Add entry link is too big
-- Favicon
-- Update the page title to biotrak
 - Signing out
 - API get routes
   - Will need encoding
+- Favicon
+- Charts
 
 # Improvements
 ## Tests
@@ -39,5 +39,7 @@ Maybe just fix with `npx prettier . --write`
   - Frontend too
 ## Security
 - Security (csp nonce, tokens, csrf)
-
-
+## Static analysis
+- Runner for static check and error check
+## Integration Tests
+- Try playwright?
