@@ -11,7 +11,7 @@ import (
 
 func (s Store) GetEntries() ([]types.Entry, error) {
 	query := `
-	SELECT id, date, weight, waist, bp, created, last_modified
+	SELECT id, entry_date, weight, waist, bp, created, last_modified
 	FROM entry
 	ORDER BY id DESC;
 	`
@@ -52,9 +52,9 @@ func (s Store) GetEntries() ([]types.Entry, error) {
 
 func (s Store) GetEntry(entryDate time.Time) (types.Entry, error) {
 	query := `
-	SELECT id, date, weight, waist, bp, created, last_modified
+	SELECT id, entry_date, weight, waist, bp, created, last_modified
 	FROM entry
-	WHERE date = ?
+	WHERE entry_date = ?
 	`
 
 	// TODO - what to do with this context
@@ -82,7 +82,7 @@ func (s Store) GetEntry(entryDate time.Time) (types.Entry, error) {
 func (s Store) InsertEntry(entry types.Entry) error {
 	insert := `
 	INSERT INTO entry
-	(date, weight, waist, bp, created, last_modified)
+	(entry_date, weight, waist, bp, created, last_modified)
 	VALUES (?, ?, ?, ?, ?, ?);
 	`
 	now := formatTime(time.Now())
@@ -148,7 +148,7 @@ func (s Store) UpdateEntry(entry types.Entry) error {
 	update := `
 	UPDATE entry
 	SET weight = ?, waist = ?, bp = ?, last_modified = ?
-	WHERE date = ?
+	WHERE entry_date = ?
 	`
 	now := formatTime(time.Now())
 	formatedTime := formatTime(entry.Date)

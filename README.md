@@ -13,10 +13,6 @@ What could be happening here:
 - The session table should be keyed off the session id, not user id
 - That does not explain why the session.ID check is failing
 
-## SQL linting issues
-
-Rename keys on new tables and push data over. Drop old tables
-
 # Features
 
 - API get routes
