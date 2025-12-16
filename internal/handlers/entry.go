@@ -1,15 +1,33 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/stpotter16/biodata/internal/parse"
 	"github.com/stpotter16/biodata/internal/store"
+	"github.com/stpotter16/biodata/internal/types"
 )
 
-func entriesGet() http.HandlerFunc {
+func entriesGet(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var apiEntries []types.EntryAPI
+		entries, err := store.GetEntries()
+		for _, entry := range entries {
+			// TODO - Do I really need to return an error here?
+			apiEntry, _ := types.ToEntryApi(entry)
+			apiEntries = append(apiEntries, apiEntry)
+		}
+		if err != nil {
+			log.Printf("Error loading entries: %v", err)
+			http.Error(w, "Error loading entries", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Rype", "application/json")
+		json.NewEncoder(w).Encode(apiEntries)
 	}
 }
 

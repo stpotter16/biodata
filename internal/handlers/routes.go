@@ -31,7 +31,7 @@ func addRoutes(
 
 	// API
 	apiAuthRequired := middleware.NewApiAuthenticationRequiredMiddleware(sessionManager, authorizer)
-	mux.Handle("GET /api/entries", apiAuthRequired(entriesGet()))
+	mux.Handle("GET /api/entries", apiAuthRequired(entriesGet(store)))
 	mux.Handle("GET /api/entries/{date}", apiAuthRequired(entryGet()))
 	mux.Handle("POST /api/entry", apiAuthRequired(entryPost(store)))
 	mux.Handle("PUT /api/entries/{date}", apiAuthRequired(entryPut(store)))
