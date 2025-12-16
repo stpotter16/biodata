@@ -4,13 +4,17 @@ Track basic biodata
 
 # Features
 
-- API get routes
-  - Will need encoding
 - Signing out
 - Favicon
 - Charts
 
 # Improvements
+
+## Error handling
+
+- Error handling
+  - ties into logging (better types too).
+  - Frontend too
 
 ## Clean up
 
@@ -21,12 +25,6 @@ Track basic biodata
 
 - Too much logging (log at lowest level only or whatever?)
 - Custom handler to log out response status code
-
-## Error handling
-
-- Error handling
-  - ties into logging (better types too).
-  - Frontend too
 
 ## Security
 
