@@ -43,8 +43,7 @@ tbody tr:hover {
     background-color: #f8f8f9;
 }
 
-table + a {
-    display: block;
+table + div {
     text-align: right;
     margin-top: 1rem;
 }

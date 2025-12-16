@@ -16,17 +16,13 @@ Rename keys on new tables and push data over. Drop old tables
 Maybe just fix with `npx prettier . --write`
 
 # Features
-- index page: Add entry link is too big
-- Signing out
 - API get routes
   - Will need encoding
+- Signing out
 - Favicon
 - Charts
 
 # Improvements
-## Tests
-- Tests (unit, integration) - dry it up
-  - Need test runners too. Good examples abound here
 ## Clean up
 - All the TODOs
 - Clean up Waist, Weight, BP string formatting to use %g
@@ -39,6 +35,9 @@ Maybe just fix with `npx prettier . --write`
   - Frontend too
 ## Security
 - Security (csp nonce, tokens, csrf)
+## Tests
+- Tests (unit, integration) - dry it up
+  - Need test runners too. Good examples abound here
 ## Static analysis
 - Runner for static check and error check
 ## Integration Tests
