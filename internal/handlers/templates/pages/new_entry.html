@@ -39,6 +39,11 @@
     });
   }
 
+  // Close button for error message
+  document.getElementById("error-close").addEventListener("click", () => {
+    document.getElementById("error-message").style.display = "none";
+  });
+
   newEntryForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
     const date = document.getElementById("date").value;
@@ -52,11 +57,16 @@
       })
       .catch((error) => {
         enableNewEntryForm();
-        console.log(error);
+        document.getElementById("error-text").textContent = error;
+        document.getElementById("error-message").style.display = "flex";
       });
   });
 </script>
 {{ end }} {{ define "content" }}
+<div id="error-message" style="display: none">
+  <span id="error-text"></span>
+  <button id="error-close" type="button">&times;</button>
+</div>
 <form id="new-entry">
   <label for="date">Date</label>
   <input type="date" name="date" id="date" required />

@@ -39,6 +39,11 @@
     });
   }
 
+  // Close button for error message
+  document.getElementById("error-close").addEventListener("click", () => {
+    document.getElementById("error-message").style.display = "none";
+  });
+
   editEntryForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
     const date = document.getElementById("date").innerText;
@@ -52,12 +57,17 @@
       })
       .catch((error) => {
         enableEditEntryForm();
-        console.log(error);
+        document.getElementById("error-text").textContent = error;
+        document.getElementById("error-message").style.display = "flex";
       });
   });
 </script>
 {{ end }} {{ define "content" }}
 <h1 id="date">{{ formatDate .Entry.Date }}</h1>
+<div id="error-message" style="display: none">
+  <span id="error-text"></span>
+  <button id="error-close" type="button">&times;</button>
+</div>
 <form id="edit-entry">
   <label for="weight">Weight</label>
   <input

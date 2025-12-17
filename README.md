@@ -9,11 +9,6 @@ Track basic biodata
 
 # Improvements
 
-## Error handling
-
-- Error handling
-  - Frontend too
-
 ## Clean up
 
 - All the TODOs
