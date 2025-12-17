@@ -36,6 +36,12 @@
     });
   }
 
+  // Close button for error message
+  document.getElementById("error-close").addEventListener("click", () => {
+    document.getElementById("error-message").style.display = "none";
+    document.getElementById("passphrase").value = "";
+  });
+
   loginForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
     const passphrase = document.getElementById("passphrase").value;
@@ -46,12 +52,17 @@
       })
       .catch((error) => {
         enableLoginForm();
-        console.log(error);
+        document.getElementById("error-text").textContent = error;
+        document.getElementById("error-message").style.display = "flex";
       });
   });
 </script>
 {{ end }} {{ define "content" }}
 <h1>Login</h1>
+<div id="error-message" style="display: none">
+  <span id="error-text"></span>
+  <button id="error-close" type="button">&times;</button>
+</div>
 <form id="login">
   <label for="passphrase">Passphrase</label>
   <input type="password" name="passphrase" id="passphrase" />

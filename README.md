@@ -14,14 +14,14 @@ Track basic biodata
 - Error handling
   - Frontend too
 
-## Security
-
-- Security (csp nonce, tokens, csrf)
-
 ## Clean up
 
 - All the TODOs
 - Clean up Waist, Weight, BP string formatting to use %g
+
+## Security
+
+- Security (csp nonce, tokens, csrf)
 
 ## Tests
 
@@ -42,4 +42,29 @@ Track basic biodata
 
 ## Logging
 
-- Custom handler to log out response status code
+- Custom handler to log out response status code. Claude recommends...
+
+```
+  type statusRecorder struct {
+      http.ResponseWriter
+      statusCode int
+  }
+
+  func (r *statusRecorder) WriteHeader(statusCode int) {
+      r.statusCode = statusCode
+      r.ResponseWriter.WriteHeader(statusCode)
+  }
+
+  func LoggingWrapper(next http.Handler) http.Handler {
+      return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+          start := time.Now()
+          recorder := &statusRecorder{
+              ResponseWriter: w,
+              statusCode: 200, // default to 200 if WriteHeader is never called
+          }
+          next.ServeHTTP(recorder, r)
+          log.Printf("%s %s %s %d %s", r.Method, r.Host, r.URL.Path,
+              recorder.statusCode, time.Since(start))
+      })
+  }
+```
