@@ -23,13 +23,13 @@ func ParseEntryPost(r *http.Request) (types.Entry, error) {
 	decoder := json.NewDecoder(r.Body)
 
 	if err := decoder.Decode(&body); err != nil {
-		log.Printf("Invalid new entry request: %v", err)
+		log.Printf("Invalid new entry request %+v with parse error: %v", body, err)
 		return types.Entry{}, err
 	}
 
 	date, err := time.Parse("2006-01-02", body.Date)
 	if err != nil {
-		log.Printf("Could not parse payload date field: %v", err)
+		log.Printf("Could not parse payload date field %s: %v", body.Date, err)
 		return types.Entry{}, err
 	}
 
@@ -40,7 +40,7 @@ func ParseEntryPost(r *http.Request) (types.Entry, error) {
 	} else {
 		weightValue, err := strconv.ParseFloat(body.Weight, 64)
 		if err != nil {
-			log.Printf("Could not parse payload weight field: %v", err)
+			log.Printf("Could not parse payload weight field %s: %v", body.Weight, err)
 			return types.Entry{}, err
 		}
 		weight = types.NewWeight(weightValue)
@@ -53,7 +53,7 @@ func ParseEntryPost(r *http.Request) (types.Entry, error) {
 	} else {
 		waistValue, err := strconv.ParseFloat(body.Waist, 64)
 		if err != nil {
-			log.Printf("Could not parse payload waist field: %v", err)
+			log.Printf("Could not parse payload waist field %s: %v", body.Waist, err)
 			return types.Entry{}, err
 		}
 		waist = types.NewWaist(waistValue)

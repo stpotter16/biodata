@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"embed"
-	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"time"
 
@@ -28,7 +28,10 @@ func loginGet() http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/login.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		t.Execute(w, nil)
+		if err := t.Execute(w, nil); err != nil {
+			log.Printf("Could not create login page: %v", err)
+			http.Error(w, "Server issue - try again later", http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -42,14 +45,18 @@ func indexGet(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		entries, err := store.GetEntries()
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not read existing entries: %v", err), http.StatusInternalServerError)
+			log.Printf("Could not read existing entries: %v", err)
+			http.Error(w, "Could not load entries - try again later", http.StatusInternalServerError)
 			return
 		}
-		t.Execute(w, struct {
+		if err = t.Execute(w, struct {
 			Entries []types.Entry
 		}{
 			Entries: entries,
-		})
+		}); err != nil {
+			log.Printf("Could not create entry page: %v", err)
+			http.Error(w, "Server issue - try again later", http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -61,7 +68,10 @@ func newEntryGet() http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/new_entry.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		t.Execute(w, nil)
+		if err := t.Execute(w, nil); err != nil {
+			log.Printf("Could not create new entry page: %v", err)
+			http.Error(w, "Server issue - try again later", http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -76,12 +86,14 @@ func editEntryGet(store store.Store) http.HandlerFunc {
 		entryDateStr := r.PathValue("date")
 		entryDate, err := time.Parse("2006-01-02", entryDateStr)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not parse entry date: %v", err), http.StatusBadRequest)
+			log.Printf("Could not parse entry date: %v", err)
+			http.Error(w, "Invalid entry date", http.StatusBadRequest)
 			return
 		}
 		entry, err := store.GetEntry(entryDate)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Could not read existing entries: %v", err), http.StatusInternalServerError)
+			log.Printf("Could not read existing entries: %v", err)
+			http.Error(w, "Could not load entry data", http.StatusInternalServerError)
 			return
 		}
 		if err = t.Execute(w, struct {
@@ -89,7 +101,8 @@ func editEntryGet(store store.Store) http.HandlerFunc {
 		}{
 			Entry: entry,
 		}); err != nil {
-			http.Error(w, fmt.Sprintf("Could not process template: %v", err), http.StatusInternalServerError)
+			log.Printf("Could not create edit entry page: %v", err)
+			http.Error(w, "Server issue - try again later", http.StatusInternalServerError)
 		}
 	}
 }

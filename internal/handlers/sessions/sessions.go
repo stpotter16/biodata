@@ -56,12 +56,11 @@ func (s SessionManger) CreateSession(w http.ResponseWriter) error {
 
 	serializedSession, err := serializeSession(session)
 	if err != nil {
-		log.Printf("Failed to serialize session: %v", err)
 		return err
 	}
 
 	if err := s.insertSession(session.ID, serializedSession); err != nil {
-		log.Printf("Failed to save session: %v", err)
+		log.Printf("Failed to save session %v: %v", session, err)
 		return err
 	}
 	return nil
@@ -70,11 +69,10 @@ func (s SessionManger) CreateSession(w http.ResponseWriter) error {
 func (s SessionManger) DeleteSession(w http.ResponseWriter, r *http.Request) error {
 	session, err := s.loadSession(r)
 	if err != nil {
-		log.Printf("Could not load session: %v", err)
 		return err
 	}
 	if err = s.deleteSession(session.ID); err != nil {
-		log.Printf("Could not delete session: %v", err)
+		log.Printf("Could not delete session %v: %v", session, err)
 		return err
 	}
 	if err = s.deleteSessionCookie(w); err != nil {
@@ -120,7 +118,7 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 
 	serializedSession, err := s.readSession(cookieToken)
 	if err != nil {
-		log.Printf("Failed to load session data: %v", err)
+		log.Printf("Failed to load session data for session %s: %v", cookieToken, err)
 		return Session{}, err
 	}
 

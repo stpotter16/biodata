@@ -12,13 +12,7 @@ Track basic biodata
 ## Error handling
 
 - Error handling
-  - ties into logging (better types too).
   - Frontend too
-
-## Logging
-
-- Too much logging (log at lowest level only or whatever?)
-- Custom handler to log out response status code
 
 ## Security
 
@@ -41,3 +35,11 @@ Track basic biodata
 ## Integration Tests
 
 - Try playwright?
+
+## Structure logging
+
+- Experiment with `log/slog`
+
+## Logging
+
+- Custom handler to log out response status code

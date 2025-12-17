@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/stpotter16/biodata/internal/handlers/authorization"
@@ -12,21 +13,25 @@ func loginPost(authorizer authorization.Authorizer, sessionManager sessions.Sess
 	return func(w http.ResponseWriter, r *http.Request) {
 		request, err := parse.ParseLoginPost(r)
 		if err != nil {
+			log.Printf("Invalid login request: %v", err)
 			http.Error(w, "Invalid login request", http.StatusBadRequest)
 			return
 		}
 		if !authorizer.Authorize(request) {
+			log.Printf("Invalid login attempt: %+v", request)
 			http.Error(w, "Invalid login attempt", http.StatusBadRequest)
 			return
 		}
-		// TODO - handle error
-		sessionManager.CreateSession(w)
+		if err = sessionManager.CreateSession(w); err != nil {
+			http.Error(w, "Failed to login", http.StatusInternalServerError)
+		}
 	}
 }
 
 func loginDelete(sessionManger sessions.SessionManger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// TODO - handle error
-		sessionManger.DeleteSession(w, r)
+		if err := sessionManger.DeleteSession(w, r); err != nil {
+			http.Error(w, "Failed to logout", http.StatusInternalServerError)
+		}
 	}
 }

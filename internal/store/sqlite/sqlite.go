@@ -1,7 +1,6 @@
 package sqlite
 
 import (
-	"log"
 	"time"
 
 	"github.com/stpotter16/biodata/internal/store/db"
@@ -19,7 +18,6 @@ func New(db db.DB) (Store, error) {
 	store := Store{db: &db}
 	err := store.runMigrations()
 	if err != nil {
-		log.Printf("Could not run database migrations: %v", err)
 		return Store{}, err
 	}
 	return store, nil

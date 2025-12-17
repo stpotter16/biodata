@@ -47,7 +47,7 @@ func (s Store) runMigrations() error {
 		}
 		// TODO: What to do with the context here...
 		if err := s.db.ExecuteTransaction(context.TODO(), transactions...); err != nil {
-			log.Printf("Could not execute migration: %v", err)
+			log.Printf("Could not execute migration %d: %v", migration.version, err)
 			return err
 		}
 

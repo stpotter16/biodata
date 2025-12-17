@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -27,7 +26,7 @@ func entriesGet(store store.Store) http.HandlerFunc {
 			apiEntries = append(apiEntries, apiEntry)
 		}
 
-		w.Header().Set("Content-Rype", "application/json")
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(apiEntries)
 	}
 }
@@ -50,7 +49,7 @@ func entryGet(store store.Store) http.HandlerFunc {
 		// TODO - Do I need this error?
 		apiEntry, _ := types.ToEntryApi(entry)
 
-		w.Header().Set("Content-Rype", "application/json")
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(apiEntry)
 	}
 }
@@ -59,13 +58,13 @@ func entryPost(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		newEntry, err := parse.ParseEntryPost(r)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Invalid new entry request: %v", err), http.StatusBadRequest)
+			http.Error(w, "Invalid new entry request", http.StatusBadRequest)
 			return
 		}
 
-		// TODO - handle error
 		if err = store.InsertEntry(newEntry); err != nil {
-			http.Error(w, fmt.Sprintf("Could not add new entry: %v", err), http.StatusInternalServerError)
+			log.Printf("Could not added new entry %+v: %v", newEntry, err)
+			http.Error(w, "Could not add new entry", http.StatusInternalServerError)
 		}
 	}
 }
@@ -74,11 +73,13 @@ func entryPut(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		updatedEntry, err := parse.ParseEntryPut(r)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Invalid entry update request: %v", err), http.StatusBadRequest)
+			http.Error(w, "Invalid entry update request", http.StatusBadRequest)
 			return
 		}
 
-		// TODO - handle error
-		store.UpdateEntry(updatedEntry)
+		if err = store.UpdateEntry(updatedEntry); err != nil {
+			log.Printf("Could not update entry %+v: %v", updatedEntry, err)
+			http.Error(w, "Could not update entry", http.StatusInternalServerError)
+		}
 	}
 }

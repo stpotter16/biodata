@@ -19,7 +19,7 @@ func serializeSession(s Session) ([]byte, error) {
 
 	var b bytes.Buffer
 	if err := json.NewEncoder(&b).Encode(ss); err != nil {
-		log.Printf("Could not serialize session: %v", err)
+		log.Printf("Could not serialize session %v: %v", s, err)
 		return nil, err
 	}
 
