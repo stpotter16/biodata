@@ -27,7 +27,10 @@ func entriesGet(store store.Store) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(apiEntries)
+		if err = json.NewEncoder(w).Encode(apiEntries); err != nil {
+			log.Printf("Could not serialize payload %+v: %v", apiEntries, err)
+			http.Error(w, "Could not serialize entries", http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -50,7 +53,10 @@ func entryGet(store store.Store) http.HandlerFunc {
 		apiEntry, _ := types.ToEntryApi(entry)
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(apiEntry)
+		if err = json.NewEncoder(w).Encode(apiEntry); err != nil {
+			log.Printf("Could not serialize payload %+v: %v", apiEntry, err)
+			http.Error(w, "Could not serialize entry", http.StatusInternalServerError)
+		}
 	}
 }
 
