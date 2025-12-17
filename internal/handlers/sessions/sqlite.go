@@ -80,3 +80,16 @@ func (s SessionManger) insertSession(key string, session []byte) error {
 
 	return err
 }
+
+func (s SessionManger) deleteSession(sessionId string) error {
+	delete := `
+	DELETE FROM
+		session
+	WHERE
+		session_key = ?
+	`
+	// TODO - what context?
+	_, err := s.db.Exec(context.TODO(), delete, sessionId)
+
+	return err
+}

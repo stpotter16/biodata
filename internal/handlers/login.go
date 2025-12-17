@@ -23,3 +23,10 @@ func loginPost(authorizer authorization.Authorizer, sessionManager sessions.Sess
 		sessionManager.CreateSession(w)
 	}
 }
+
+func loginDelete(sessionManger sessions.SessionManger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// TODO - handle error
+		sessionManger.DeleteSession(w, r)
+	}
+}

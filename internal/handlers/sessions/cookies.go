@@ -28,3 +28,17 @@ func (s SessionManger) writeSessionCookie(w http.ResponseWriter, session Session
 
 	return cookies.WriteSigned(w, cookie, s.sessionHmacSecretKey)
 }
+
+func (s SessionManger) deleteSessionCookie(w http.ResponseWriter) error {
+	cookie := http.Cookie{
+		Name:     SESSION_COOKIE,
+		Value:    "deleted",
+		Path:     "/",
+		MaxAge:   -1,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	return cookies.WriteSigned(w, cookie, s.sessionHmacSecretKey)
+}

@@ -4,7 +4,6 @@ Track basic biodata
 
 # Features
 
-- Signing out
 - Favicon
 - Charts
 
@@ -16,11 +15,6 @@ Track basic biodata
   - ties into logging (better types too).
   - Frontend too
 
-## Clean up
-
-- All the TODOs
-- Clean up Waist, Weight, BP string formatting to use %g
-
 ## Logging
 
 - Too much logging (log at lowest level only or whatever?)
@@ -29,6 +23,11 @@ Track basic biodata
 ## Security
 
 - Security (csp nonce, tokens, csrf)
+
+## Clean up
+
+- All the TODOs
+- Clean up Waist, Weight, BP string formatting to use %g
 
 ## Tests
 

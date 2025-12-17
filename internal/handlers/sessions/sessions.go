@@ -67,6 +67,23 @@ func (s SessionManger) CreateSession(w http.ResponseWriter) error {
 	return nil
 }
 
+func (s SessionManger) DeleteSession(w http.ResponseWriter, r *http.Request) error {
+	session, err := s.loadSession(r)
+	if err != nil {
+		log.Printf("Could not load session: %v", err)
+		return err
+	}
+	if err = s.deleteSession(session.ID); err != nil {
+		log.Printf("Could not delete session: %v", err)
+		return err
+	}
+	if err = s.deleteSessionCookie(w); err != nil {
+		log.Printf("Could not delete session cookie: %v", err)
+		return err
+	}
+	return nil
+}
+
 func (s SessionManger) PopulateSessionContext(r *http.Request) (context.Context, error) {
 	session, err := s.loadSession(r)
 

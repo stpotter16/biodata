@@ -1,4 +1,49 @@
-{{ define "content" }} {{ if .Entries }}
+{{ define "script-tags" }}
+<script type="module">
+  const logoutButton = document.getElementById("logoutButton");
+
+  function setLogoutButtonState(isEnabled) {
+    logoutButton.disabled = !isEnabled;
+  }
+
+  function disableLogoutButton() {
+    setLogoutButtonState(false);
+  }
+
+  function enableLogoutButton() {
+    setLogoutButtonState(true);
+  }
+
+  async function deleteLogout() {
+    return fetch("/login", {
+      method: "DELETE",
+      mode: "same-origin",
+      credentials: "include",
+      cache: "no-cache",
+      redirect: "error",
+    }).then((response) => {
+      if (!response.ok) {
+        return response.text().then((error) => {
+          return Promise.reject(error);
+        });
+      }
+      return Promise.resolve();
+    });
+  }
+
+  logoutButton.addEventListener("click", () => {
+    disableLogoutButton();
+    deleteLogout()
+      .then(() => {
+        document.location = "/";
+      })
+      .catch((error) => {
+        enableLogoutButton();
+        console.log(error);
+      });
+  });
+</script>
+{{ end }} {{ define "content" }} {{ if .Entries }}
 <table>
   <tr>
     <th>Date</th>
@@ -20,5 +65,8 @@
 {{ else }}
 <h2>No entries yet. Add one!</h2>
 {{ end }}
-<div><a href="/entry/new">Add entry</a></div>
+<div>
+  <button id="logoutButton">Logout</button>
+  <a href="/entry/new">Add entry</a>
+</div>
 {{ end }}

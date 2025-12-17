@@ -28,6 +28,7 @@ func addRoutes(
 
 	// Auth
 	mux.HandleFunc("POST /login", loginPost(authorizer, sessionManager))
+	mux.HandleFunc("DELETE /login", loginDelete(sessionManager))
 
 	// API
 	apiAuthRequired := middleware.NewApiAuthenticationRequiredMiddleware(sessionManager, authorizer)

@@ -46,7 +46,9 @@ tbody tr:hover {
 }
 
 table + div {
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
 }
 
@@ -108,6 +110,33 @@ input[type="submit"]:active {
   background-color: #222;
 }
 
+/* Logout button - destructive styling */
+#logoutButton {
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  background-color: #c62828;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#logoutButton:hover {
+  background-color: #e53935;
+}
+
+#logoutButton:active {
+  background-color: #b71c1c;
+}
+
+#logoutButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     color: #ddd;
@@ -161,5 +190,18 @@ input[type="submit"]:active {
 
   input[type="submit"]:active {
     background-color: #4ae;
+  }
+
+  #logoutButton {
+    background-color: #ef5350;
+    color: #123;
+  }
+
+  #logoutButton:hover {
+    background-color: #ff6f6f;
+  }
+
+  #logoutButton:active {
+    background-color: #e53935;
   }
 }
