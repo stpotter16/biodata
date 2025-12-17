@@ -13,7 +13,7 @@ func loginPost(authorizer authorization.Authorizer, sessionManager sessions.Sess
 	return func(w http.ResponseWriter, r *http.Request) {
 		request, err := parse.ParseLoginPost(r)
 		if err != nil {
-			log.Printf("Invalid login request: %v", err)
+			log.Printf("Invalid login request %+v: %v", request, err)
 			http.Error(w, "Invalid login request", http.StatusBadRequest)
 			return
 		}

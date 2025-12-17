@@ -23,7 +23,7 @@ func ParseEntryPost(r *http.Request) (types.Entry, error) {
 	decoder := json.NewDecoder(r.Body)
 
 	if err := decoder.Decode(&body); err != nil {
-		log.Printf("Invalid new entry request %+v with parse error: %v", body, err)
+		log.Printf("Invalid new entry request %+v: %v", body, err)
 		return types.Entry{}, err
 	}
 
@@ -86,7 +86,7 @@ func ParseEntryPut(r *http.Request) (types.Entry, error) {
 	dateStr := r.PathValue("date")
 	entryDate, err := time.Parse("2006-01-02", dateStr)
 	if err != nil {
-		log.Printf("Could not parse entry date %s", dateStr)
+		log.Printf("Could not parse entry date %s: %v", dateStr, err)
 		return types.Entry{}, nil
 	}
 
@@ -99,7 +99,7 @@ func ParseEntryPut(r *http.Request) (types.Entry, error) {
 	decoder := json.NewDecoder(r.Body)
 
 	if err := decoder.Decode(&body); err != nil {
-		log.Printf("Invalid new entry request: %v", err)
+		log.Printf("Invalid new entry request %+v: %v", body, err)
 		return types.Entry{}, err
 	}
 
@@ -110,7 +110,7 @@ func ParseEntryPut(r *http.Request) (types.Entry, error) {
 	} else {
 		weightValue, err := strconv.ParseFloat(body.Weight, 64)
 		if err != nil {
-			log.Printf("Could not parse payload weight field: %v", err)
+			log.Printf("Could not parse payload weight field %s: %v", body.Weight, err)
 			return types.Entry{}, err
 		}
 		weight = types.NewWeight(weightValue)
@@ -123,7 +123,7 @@ func ParseEntryPut(r *http.Request) (types.Entry, error) {
 	} else {
 		waistValue, err := strconv.ParseFloat(body.Waist, 64)
 		if err != nil {
-			log.Printf("Could not parse payload waist field: %v", err)
+			log.Printf("Could not parse payload waist field %s: %v", body.Waist, err)
 			return types.Entry{}, err
 		}
 		waist = types.NewWaist(waistValue)
@@ -191,17 +191,17 @@ func ParseEntryDTO(entryDTO types.EntryDTO) (types.Entry, error) {
 func parseBPString(bps string) (types.BP, error) {
 	parts := strings.Split(bps, "/")
 	if len(parts) != 2 {
-		log.Printf("Invalid BP string received")
+		log.Printf("Invalid BP string received. Got %s", bps)
 		return types.BP{}, fmt.Errorf("Expected string with systolic and diastolic. Received %s", bps)
 	}
 	systolicFloat, err := strconv.ParseFloat(parts[0], 64)
 	if err != nil {
-		log.Printf("Invalid systolic portion of BP string")
+		log.Printf("Invalid systolic portion of BP string %s: %v", parts[0], err)
 		return types.BP{}, err
 	}
 	diastolicFloat, err := strconv.ParseFloat(parts[1], 64)
 	if err != nil {
-		log.Printf("Invalid diastolic portion of BP string")
+		log.Printf("Invalid diastolic portion of BP string %s: %v", parts[1], err)
 		return types.BP{}, err
 	}
 	return types.BP{

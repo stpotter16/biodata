@@ -2,7 +2,6 @@ package parse
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/stpotter16/biodata/internal/types"
@@ -15,8 +14,7 @@ func ParseLoginPost(r *http.Request) (types.LoginRequest, error) {
 
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&body); err != nil {
-		log.Printf("Invalid login request: %v", err)
-		return types.LoginRequest{}, nil
+		return types.LoginRequest{}, err
 	}
 
 	request := types.LoginRequest{
