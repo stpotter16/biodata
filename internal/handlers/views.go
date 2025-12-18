@@ -43,7 +43,7 @@ func indexGet(store store.Store) http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		entries, err := store.GetEntries()
+		entries, err := store.GetEntries(r.Context())
 		if err != nil {
 			log.Printf("Could not read existing entries: %v", err)
 			http.Error(w, "Could not load entries - try again later", http.StatusInternalServerError)
@@ -90,7 +90,7 @@ func editEntryGet(store store.Store) http.HandlerFunc {
 			http.Error(w, "Invalid entry date", http.StatusBadRequest)
 			return
 		}
-		entry, err := store.GetEntry(entryDate)
+		entry, err := store.GetEntry(r.Context(), entryDate)
 		if err != nil {
 			log.Printf("Could not read existing entries: %v", err)
 			http.Error(w, "Could not load entry data", http.StatusInternalServerError)

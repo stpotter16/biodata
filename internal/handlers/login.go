@@ -22,7 +22,7 @@ func loginPost(authorizer authorization.Authorizer, sessionManager sessions.Sess
 			http.Error(w, "Invalid login attempt", http.StatusBadRequest)
 			return
 		}
-		if err = sessionManager.CreateSession(w); err != nil {
+		if err = sessionManager.CreateSession(w, r); err != nil {
 			http.Error(w, "Failed to login", http.StatusInternalServerError)
 		}
 	}

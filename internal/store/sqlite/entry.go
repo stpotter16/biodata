@@ -9,15 +9,14 @@ import (
 	"github.com/stpotter16/biodata/internal/types"
 )
 
-func (s Store) GetEntries() ([]types.Entry, error) {
+func (s Store) GetEntries(ctx context.Context) ([]types.Entry, error) {
 	query := `
 	SELECT id, entry_date, weight, waist, bp, created, last_modified
 	FROM entry
 	ORDER BY id DESC;
 	`
 
-	// TODO - what to do with this context
-	rows, err := s.db.Query(context.TODO(), query)
+	rows, err := s.db.Query(ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +49,7 @@ func (s Store) GetEntries() ([]types.Entry, error) {
 	return entries, nil
 }
 
-func (s Store) GetEntry(entryDate time.Time) (types.Entry, error) {
+func (s Store) GetEntry(ctx context.Context, entryDate time.Time) (types.Entry, error) {
 	query := `
 	SELECT id, entry_date, weight, waist, bp, created, last_modified
 	FROM entry
@@ -58,8 +57,7 @@ func (s Store) GetEntry(entryDate time.Time) (types.Entry, error) {
 	`
 
 	dateStr := formatTime(entryDate)
-	// TODO - what to do with this context
-	row := s.db.QueryRow(context.TODO(), query, dateStr)
+	row := s.db.QueryRow(ctx, query, dateStr)
 	var entryDTO types.EntryDTO
 	var date string
 
@@ -79,7 +77,7 @@ func (s Store) GetEntry(entryDate time.Time) (types.Entry, error) {
 	return entry, nil
 }
 
-func (s Store) InsertEntry(entry types.Entry) error {
+func (s Store) InsertEntry(ctx context.Context, entry types.Entry) error {
 	insert := `
 	INSERT INTO entry
 	(entry_date, weight, waist, bp, created, last_modified)
@@ -127,9 +125,8 @@ func (s Store) InsertEntry(entry types.Entry) error {
 		}
 	}
 
-	// TODO - what context?
 	_, err := s.db.Exec(
-		context.TODO(),
+		ctx,
 		insert,
 		formatedDate,
 		weight,
@@ -144,7 +141,7 @@ func (s Store) InsertEntry(entry types.Entry) error {
 	return nil
 }
 
-func (s Store) UpdateEntry(entry types.Entry) error {
+func (s Store) UpdateEntry(ctx context.Context, entry types.Entry) error {
 	update := `
 	UPDATE entry
 	SET weight = ?, waist = ?, bp = ?, last_modified = ?
@@ -192,9 +189,8 @@ func (s Store) UpdateEntry(entry types.Entry) error {
 		}
 	}
 
-	// TODO - what context?
 	_, err := s.db.Exec(
-		context.TODO(),
+		ctx,
 		update,
 		weight,
 		waist,

@@ -32,7 +32,7 @@ func (s SessionManger) deleteExpiredSessions() error {
 	return err
 }
 
-func (s SessionManger) readSession(key string) ([]byte, error) {
+func (s SessionManger) readSession(ctx context.Context, key string) ([]byte, error) {
 	query := `
 	SELECT
 		value
@@ -43,8 +43,7 @@ func (s SessionManger) readSession(key string) ([]byte, error) {
 		expires_at >= datetime('now', 'localtime')
 	`
 
-	// TODO - what context
-	row := s.db.QueryRow(context.TODO(), query, key)
+	row := s.db.QueryRow(ctx, query, key)
 	var serializedSession []byte
 	if err := row.Scan(&serializedSession); err != nil {
 		log.Printf("Session key '%s' is invalid", key)
@@ -53,7 +52,7 @@ func (s SessionManger) readSession(key string) ([]byte, error) {
 	return serializedSession, nil
 }
 
-func (s SessionManger) insertSession(key string, session []byte) error {
+func (s SessionManger) insertSession(ctx context.Context, key string, session []byte) error {
 	insert := `
 	INSERT OR REPLACE INTO
 		session
@@ -69,9 +68,8 @@ func (s SessionManger) insertSession(key string, session []byte) error {
 	)`
 	expires_time := time.Now().Add(SESSION_TTL).Format(time.RFC3339)
 
-	// TODO - what context?
 	_, err := s.db.Exec(
-		context.TODO(),
+		ctx,
 		insert,
 		key,
 		session,
@@ -81,15 +79,14 @@ func (s SessionManger) insertSession(key string, session []byte) error {
 	return err
 }
 
-func (s SessionManger) deleteSession(sessionId string) error {
+func (s SessionManger) deleteSession(ctx context.Context, sessionId string) error {
 	delete := `
 	DELETE FROM
 		session
 	WHERE
 		session_key = ?
 	`
-	// TODO - what context?
-	_, err := s.db.Exec(context.TODO(), delete, sessionId)
+	_, err := s.db.Exec(ctx, delete, sessionId)
 
 	return err
 }

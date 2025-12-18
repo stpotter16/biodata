@@ -1,14 +1,15 @@
 package store
 
 import (
+	"context"
 	"time"
 
 	"github.com/stpotter16/biodata/internal/types"
 )
 
 type Store interface {
-	GetEntries() ([]types.Entry, error)
-	GetEntry(entryDate time.Time) (types.Entry, error)
-	InsertEntry(types.Entry) error
-	UpdateEntry(types.Entry) error
+	GetEntries(ctx context.Context) ([]types.Entry, error)
+	GetEntry(ctx context.Context, entryDate time.Time) (types.Entry, error)
+	InsertEntry(ctx context.Context, entry types.Entry) error
+	UpdateEntry(ctx context.Context, entry types.Entry) error
 }

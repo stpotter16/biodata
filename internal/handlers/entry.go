@@ -14,7 +14,7 @@ import (
 func entriesGet(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var apiEntries []types.EntryAPI
-		entries, err := store.GetEntries()
+		entries, err := store.GetEntries(r.Context())
 		if err != nil {
 			log.Printf("Error loading entries: %v", err)
 			http.Error(w, "Error loading entries", http.StatusInternalServerError)
@@ -42,7 +42,7 @@ func entryGet(store store.Store) http.HandlerFunc {
 			http.Error(w, "Invalid date", http.StatusBadRequest)
 			return
 		}
-		entry, err := store.GetEntry(entryDate)
+		entry, err := store.GetEntry(r.Context(), entryDate)
 		if err != nil {
 			log.Printf("Could not load entry for date %s: %v", entryDateStr, err)
 			http.Error(w, "Error loading entry", http.StatusInternalServerError)
@@ -66,7 +66,7 @@ func entryPost(store store.Store) http.HandlerFunc {
 			return
 		}
 
-		if err = store.InsertEntry(newEntry); err != nil {
+		if err = store.InsertEntry(r.Context(), newEntry); err != nil {
 			log.Printf("Could not added new entry %+v: %v", newEntry, err)
 			http.Error(w, "Could not add new entry", http.StatusInternalServerError)
 		}
@@ -81,7 +81,7 @@ func entryPut(store store.Store) http.HandlerFunc {
 			return
 		}
 
-		if err = store.UpdateEntry(updatedEntry); err != nil {
+		if err = store.UpdateEntry(r.Context(), updatedEntry); err != nil {
 			log.Printf("Could not update entry %+v: %v", updatedEntry, err)
 			http.Error(w, "Could not update entry", http.StatusInternalServerError)
 		}

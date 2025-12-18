@@ -42,7 +42,7 @@ func New(db db.DB, getenv func(string) string) (SessionManger, error) {
 	return s, nil
 }
 
-func (s SessionManger) CreateSession(w http.ResponseWriter) error {
+func (s SessionManger) CreateSession(w http.ResponseWriter, r *http.Request) error {
 	sessionId := uuid.NewString()
 	session := Session{
 		ID:     sessionId,
@@ -59,7 +59,7 @@ func (s SessionManger) CreateSession(w http.ResponseWriter) error {
 		return err
 	}
 
-	if err := s.insertSession(session.ID, serializedSession); err != nil {
+	if err := s.insertSession(r.Context(), session.ID, serializedSession); err != nil {
 		log.Printf("Failed to save session %v: %v", session, err)
 		return err
 	}
@@ -71,7 +71,7 @@ func (s SessionManger) DeleteSession(w http.ResponseWriter, r *http.Request) err
 	if err != nil {
 		return err
 	}
-	if err = s.deleteSession(session.ID); err != nil {
+	if err = s.deleteSession(r.Context(), session.ID); err != nil {
 		log.Printf("Could not delete session %v: %v", session, err)
 		return err
 	}
@@ -116,7 +116,7 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 	}
 	cookieToken := cookieVals[1]
 
-	serializedSession, err := s.readSession(cookieToken)
+	serializedSession, err := s.readSession(r.Context(), cookieToken)
 	if err != nil {
 		log.Printf("Failed to load session data for session %s: %v", cookieToken, err)
 		return Session{}, err
