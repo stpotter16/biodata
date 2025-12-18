@@ -2,7 +2,7 @@
 
 Track basic biodata
 
-# Features
+# Feature Requests
 
 - Favicon
 - Charts

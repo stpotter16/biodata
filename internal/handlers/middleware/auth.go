@@ -12,13 +12,13 @@ const AUTH_HEADER = "X-BIODATA-AUTH"
 func NewViewAuthenticationRequiredMiddleware(sessionManager sessions.SessionManger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			_, err := sessionManager.PopulateSessionContext(r)
+			ctx, err := sessionManager.PopulateSessionContext(r)
 
 			if err != nil {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
-			next.ServeHTTP(w, r)
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }

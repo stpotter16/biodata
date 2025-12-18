@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/stpotter16/biodata/internal/handlers/sessions"
 	"github.com/stpotter16/biodata/internal/store"
 	"github.com/stpotter16/biodata/internal/types"
 )
@@ -44,7 +45,7 @@ func loginGet() http.HandlerFunc {
 	}
 }
 
-func indexGet(store store.Store) http.HandlerFunc {
+func indexGet(sessionManager sessions.SessionManger, store store.Store) http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").
 			Funcs(funcMap).
@@ -52,7 +53,11 @@ func indexGet(store store.Store) http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/index.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		props := viewProps{CsrfToken: ""}
+		props, err := extractViewProps(sessionManager, r)
+		if err != nil {
+			http.Error(w, "Could not validate session", http.StatusBadRequest)
+			return
+		}
 		entries, err := store.GetEntries(r.Context())
 		if err != nil {
 			log.Printf("Could not read existing entries: %v", err)
@@ -72,7 +77,7 @@ func indexGet(store store.Store) http.HandlerFunc {
 	}
 }
 
-func newEntryGet() http.HandlerFunc {
+func newEntryGet(sessionManager sessions.SessionManger) http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").
 			Funcs(funcMap).
@@ -80,7 +85,11 @@ func newEntryGet() http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/new_entry.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		props := viewProps{CsrfToken: ""}
+		props, err := extractViewProps(sessionManager, r)
+		if err != nil {
+			http.Error(w, "Could not validate session", http.StatusBadRequest)
+			return
+		}
 		if err := t.Execute(w, struct {
 			viewProps
 		}{
@@ -92,7 +101,7 @@ func newEntryGet() http.HandlerFunc {
 	}
 }
 
-func editEntryGet(store store.Store) http.HandlerFunc {
+func editEntryGet(sessionManager sessions.SessionManger, store store.Store) http.HandlerFunc {
 	t := template.Must(
 		template.New("base.html").
 			Funcs(funcMap).
@@ -100,7 +109,11 @@ func editEntryGet(store store.Store) http.HandlerFunc {
 				templateFS,
 				"templates/layouts/base.html", "templates/pages/edit_entry.html"))
 	return func(w http.ResponseWriter, r *http.Request) {
-		props := viewProps{CsrfToken: ""}
+		props, err := extractViewProps(sessionManager, r)
+		if err != nil {
+			http.Error(w, "Could not validate session", http.StatusBadRequest)
+			return
+		}
 		entryDateStr := r.PathValue("date")
 		entryDate, err := time.Parse("2006-01-02", entryDateStr)
 		if err != nil {
@@ -125,4 +138,15 @@ func editEntryGet(store store.Store) http.HandlerFunc {
 			http.Error(w, "Server issue - try again later", http.StatusInternalServerError)
 		}
 	}
+}
+
+func extractViewProps(s sessions.SessionManger, r *http.Request) (viewProps, error) {
+	session, err := s.SessionFromContext(r.Context())
+	if err != nil {
+		return viewProps{}, err
+	}
+	props := viewProps{
+		CsrfToken: session.CsrfToken,
+	}
+	return props, nil
 }
