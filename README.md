@@ -11,7 +11,8 @@ Track basic biodata
 
 ## Security
 
-- Security (csp nonce, tokens, csrf)
+- CSRF
+- CSP (policy, nonce)
 
 ## Tests
 

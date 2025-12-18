@@ -31,3 +31,6 @@ lint/sql:
 
 lint/frontend:
 	./dev-scripts/check-frontend.sh
+
+test/go:
+	./dev-scripts/run-go-tests.sh
