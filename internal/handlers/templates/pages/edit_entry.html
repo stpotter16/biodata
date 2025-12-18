@@ -17,7 +17,7 @@
       setEditEntryFormState(true);
     }
 
-    async function editEntry(date, weight, waist, bp) {
+    async function editEntry(date, weight, waist, bp, csrfToken) {
       const url = `/api/entries/${date}`;
       return fetch(url, {
         method: "PUT",
@@ -25,6 +25,9 @@
         credentials: "include",
         cache: "no-cache",
         redirect: "error",
+        headers: {
+          "X-BIODATA-CSRF-TOKEN": csrfToken,
+        },
         body: JSON.stringify({
           weight: weight,
           waist: waist,
@@ -47,12 +50,13 @@
 
     editEntryForm.addEventListener("submit", (evt) => {
       evt.preventDefault();
+      const csrfToken = document.getElementsByName("csrf-token")[0].content;
       const date = document.getElementById("date").innerText;
       const weight = document.getElementById("weight").value;
       const waist = document.getElementById("waist").value;
       const bp = document.getElementById("bp").value;
       disableEditEntryForm();
-      editEntry(date, weight, waist, bp)
+      editEntry(date, weight, waist, bp, csrfToken)
         .then(() => {
           document.location = "/";
         })

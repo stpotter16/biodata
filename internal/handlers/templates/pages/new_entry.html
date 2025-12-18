@@ -17,13 +17,16 @@
       setNewEntryFormState(true);
     }
 
-    async function newEntry(date, weight, waist, bp) {
+    async function newEntry(date, weight, waist, bp, csrfToken) {
       return fetch("/api/entry", {
         method: "POST",
         mode: "same-origin",
         credentials: "include",
         cache: "no-cache",
         redirect: "error",
+        headers: {
+          "X-BIODATA-CSRF-TOKEN": csrfToken,
+        },
         body: JSON.stringify({
           date: date,
           weight: weight,
@@ -47,12 +50,13 @@
 
     newEntryForm.addEventListener("submit", (evt) => {
       evt.preventDefault();
+      const csrfToken = document.getElementsByName("csrf-token")[0].content;
       const date = document.getElementById("date").value;
       const weight = document.getElementById("weight").value;
       const waist = document.getElementById("waist").value;
       const bp = document.getElementById("bp").value;
       disableNewEntryForm();
-      newEntry(date, weight, waist, bp)
+      newEntry(date, weight, waist, bp, csrfToken)
         .then(() => {
           document.location = "/";
         })
