@@ -26,8 +26,9 @@ func (s SessionManger) deleteExpiredSessions() error {
 	WHERE
 		expires_at <= datetime('now', 'localtime')
 	`
-	// TODO - what context?
-	_, err := s.db.Exec(context.TODO(), delete)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	_, err := s.db.Exec(ctx, delete)
 
 	return err
 }

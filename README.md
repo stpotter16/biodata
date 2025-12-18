@@ -9,10 +9,6 @@ Track basic biodata
 
 # Improvements
 
-## Clean up
-
-- All the TODOs
-
 ## Security
 
 - Security (csp nonce, tokens, csrf)

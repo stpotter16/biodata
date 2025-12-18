@@ -9,6 +9,7 @@ import (
 	"path"
 	"slices"
 	"strconv"
+	"time"
 )
 
 type migration struct {
@@ -21,8 +22,9 @@ var migrationFs embed.FS
 
 func (s Store) runMigrations() error {
 	var currentSchemaVersion int
-	// TODO: What to do with the context here...
-	row := s.db.QueryRow(context.TODO(), `PRAGMA user_version`)
+	pragmaCtx, pragmaCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer pragmaCancel()
+	row := s.db.QueryRow(pragmaCtx, `PRAGMA user_version`)
 	if err := row.Scan(&currentSchemaVersion); err != nil {
 		log.Printf("Could not read the current schema version: %v", err)
 		return err
@@ -45,8 +47,11 @@ func (s Store) runMigrations() error {
 			migration.statement,
 			fmt.Sprintf(`PRAGMA user_version=%d`, migration.version),
 		}
-		// TODO: What to do with the context here...
-		if err := s.db.ExecuteTransaction(context.TODO(), transactions...); err != nil {
+
+		migrationCtx, migrationCancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer migrationCancel()
+
+		if err := s.db.ExecuteTransaction(migrationCtx, transactions...); err != nil {
 			log.Printf("Could not execute migration %d: %v", migration.version, err)
 			return err
 		}

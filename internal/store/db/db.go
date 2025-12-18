@@ -94,7 +94,6 @@ func (db DB) ExecuteTransaction(ctx context.Context, transactions ...string) err
 }
 
 func applyPragmas(db *sql.DB) error {
-	// TODO - maybe use context here
 	if _, err := db.Exec(`
 		-- https://litestream.io/tips/
 		-- https://kerkour.com/sqlite-for-servers
