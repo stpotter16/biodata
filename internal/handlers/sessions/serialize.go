@@ -7,14 +7,16 @@ import (
 )
 
 type serializedSession struct {
-	Id     string `json:"id"`
-	UserId uint8  `json:"userid"`
+	Id        string `json:"id"`
+	UserId    uint8  `json:"userid"`
+	CsrtToken string `json:"csrfToken"`
 }
 
 func serializeSession(s Session) ([]byte, error) {
 	ss := serializedSession{
-		Id:     s.ID,
-		UserId: s.UserId,
+		Id:        s.ID,
+		UserId:    s.UserId,
+		CsrtToken: s.CsrfToken,
 	}
 
 	var b bytes.Buffer
@@ -34,8 +36,9 @@ func deserializeSession(b []byte) (Session, error) {
 	}
 
 	session := Session{
-		ID:     ss.Id,
-		UserId: ss.UserId,
+		ID:        ss.Id,
+		UserId:    ss.UserId,
+		CsrfToken: ss.CsrtToken,
 	}
 
 	return session, nil

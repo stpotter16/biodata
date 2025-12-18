@@ -2,6 +2,8 @@ package sessions
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"errors"
 	"log"
 	"net/http"
@@ -21,8 +23,9 @@ const SESSION_ENV_KEY = "BIODATA_SESSION_ENV_KEY"
 const DEFAULT_USER_ID = 1
 
 type Session struct {
-	ID     string
-	UserId uint8
+	ID        string
+	UserId    uint8
+	CsrfToken string
 }
 
 type SessionManger struct {
@@ -48,9 +51,15 @@ func New(db db.DB, getenv func(string) string) (SessionManger, error) {
 
 func (s SessionManger) CreateSession(w http.ResponseWriter, r *http.Request) error {
 	sessionId := uuid.NewString()
+	csrfToken, err := generateCsrfToken()
+	if err != nil {
+		log.Printf("Failed to generate session csrf token: %v", err)
+		return err
+	}
 	session := Session{
-		ID:     sessionId,
-		UserId: DEFAULT_USER_ID,
+		ID:        sessionId,
+		UserId:    DEFAULT_USER_ID,
+		CsrfToken: csrfToken,
 	}
 
 	if err := s.writeSessionCookie(w, session); err != nil {
@@ -138,4 +147,14 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 	}
 
 	return session, nil
+}
+
+func generateCsrfToken() (string, error) {
+	randomReader := rand.Reader
+	byteSlice := make([]byte, 16)
+	if _, err := randomReader.Read(byteSlice); err != nil {
+		return "", err
+	}
+	token := base64.URLEncoding.EncodeToString(byteSlice)
+	return token, nil
 }

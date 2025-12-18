@@ -7,8 +7,6 @@ Track basic biodata
 - Favicon
 - Charts
 
-- TODO
-
 # Improvements
 
 ## Security
