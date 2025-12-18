@@ -33,42 +33,19 @@ func ParseEntryPost(r *http.Request) (types.Entry, error) {
 		return types.Entry{}, err
 	}
 
-	var weight types.Weight
-	if body.Weight == "" {
-		log.Printf("No weight field in payload")
-		weight.Value = nil
-	} else {
-		weightValue, err := strconv.ParseFloat(body.Weight, 64)
-		if err != nil {
-			log.Printf("Could not parse payload weight field %s: %v", body.Weight, err)
-			return types.Entry{}, err
-		}
-		weight = types.NewWeight(weightValue)
+	weight, err := parseWeightField(body.Weight)
+	if err != nil {
+		return types.Entry{}, err
 	}
 
-	var waist types.Waist
-	if body.Waist == "" {
-		log.Printf("No waist field in payload")
-		waist.Value = nil
-	} else {
-		waistValue, err := strconv.ParseFloat(body.Waist, 64)
-		if err != nil {
-			log.Printf("Could not parse payload waist field %s: %v", body.Waist, err)
-			return types.Entry{}, err
-		}
-		waist = types.NewWaist(waistValue)
+	waist, err := parseWaistField(body.Waist)
+	if err != nil {
+		return types.Entry{}, err
 	}
 
-	var bp types.BP
-	if body.BP == "" {
-		log.Printf("No BP field in payload")
-		bp.Systolic = nil
-		bp.Diastolic = nil
-	} else {
-		bp, err = parseBPString(body.BP)
-		if err != nil {
-			return types.Entry{}, err
-		}
+	bp, err := parseBPField(body.BP)
+	if err != nil {
+		return types.Entry{}, err
 	}
 
 	entry := types.Entry{
@@ -102,43 +79,19 @@ func ParseEntryPut(r *http.Request) (types.Entry, error) {
 		return types.Entry{}, err
 	}
 
-	var weight types.Weight
-	if body.Weight == "" {
-		log.Printf("No weight field in payload")
-		weight.Value = nil
-	} else {
-		weightValue, err := strconv.ParseFloat(body.Weight, 64)
-		if err != nil {
-			log.Printf("Could not parse payload weight field %s: %v", body.Weight, err)
-			return types.Entry{}, err
-		}
-		weight = types.NewWeight(weightValue)
+	weight, err := parseWeightField(body.Weight)
+	if err != nil {
+		return types.Entry{}, err
 	}
 
-	var waist types.Waist
-	if body.Waist == "" {
-		log.Printf("No waist field in payload")
-		waist.Value = nil
-	} else {
-		waistValue, err := strconv.ParseFloat(body.Waist, 64)
-		if err != nil {
-			log.Printf("Could not parse payload waist field %s: %v", body.Waist, err)
-			return types.Entry{}, err
-		}
-		waist = types.NewWaist(waistValue)
+	waist, err := parseWaistField(body.Waist)
+	if err != nil {
+		return types.Entry{}, err
 	}
 
-	var bp types.BP
-	if body.BP == "" {
-		log.Printf("No BP field in payload")
-		bp.Systolic = nil
-		bp.Diastolic = nil
-	} else {
-		var err error
-		bp, err = parseBPString(body.BP)
-		if err != nil {
-			return types.Entry{}, err
-		}
+	bp, err := parseBPField(body.BP)
+	if err != nil {
+		return types.Entry{}, err
 	}
 
 	entry := types.Entry{
@@ -207,4 +160,44 @@ func parseBPString(bps string) (types.BP, error) {
 		Systolic:  &systolicFloat,
 		Diastolic: &diastolicFloat,
 	}, nil
+}
+
+func parseWeightField(weightStr string) (types.Weight, error) {
+	var weight types.Weight
+	if weightStr == "" {
+		log.Printf("No weight field in payload")
+		weight.Value = nil
+		return weight, nil
+	}
+
+	weightValue, err := strconv.ParseFloat(weightStr, 64)
+	if err != nil {
+		log.Printf("Could not parse payload weight field %s: %v", weightStr, err)
+		return types.Weight{}, err
+	}
+	return types.NewWeight(weightValue), nil
+}
+
+func parseWaistField(waistStr string) (types.Waist, error) {
+	var waist types.Waist
+	if waistStr == "" {
+		log.Printf("No waist field in payload")
+		waist.Value = nil
+		return waist, nil
+	}
+
+	waistValue, err := strconv.ParseFloat(waistStr, 64)
+	if err != nil {
+		log.Printf("Could not parse payload waist field %s: %v", waistStr, err)
+		return types.Waist{}, err
+	}
+	return types.NewWaist(waistValue), nil
+}
+
+func parseBPField(bpStr string) (types.BP, error) {
+	if bpStr == "" {
+		log.Printf("No BP field in payload")
+		return types.BP{Systolic: nil, Diastolic: nil}, nil
+	}
+	return parseBPString(bpStr)
 }
