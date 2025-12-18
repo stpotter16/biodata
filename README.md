@@ -7,10 +7,6 @@ Track basic biodata
 - Favicon
 - Charts
 
-# Fixes
-
-## Go linting
-
 - TODO
 
 # Improvements
@@ -19,10 +15,6 @@ Track basic biodata
 
 - CSRF
 - CSP (policy, nonce)
-
-## Static analysis
-
-- Runner for static check and error check
 
 ## Integration Tests
 

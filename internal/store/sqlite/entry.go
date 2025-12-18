@@ -3,6 +3,7 @@ package sqlite
 import (
 	"context"
 	"database/sql"
+	"log"
 	"time"
 
 	"github.com/stpotter16/biodata/internal/parse"
@@ -20,7 +21,11 @@ func (s Store) GetEntries(ctx context.Context) ([]types.Entry, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if err = rows.Close(); err != nil {
+			log.Printf("Error closing rows: %v", err)
+		}
+	}()
 
 	var entries []types.Entry
 	for rows.Next() {
