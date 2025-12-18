@@ -27,7 +27,7 @@ func NewApiAuthenticationRequiredMiddleware(sessionManager sessions.SessionMange
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// Try cookies first, fall back to a header if not present
-			_, sessionErr := sessionManager.PopulateSessionContext(r)
+			ctx, sessionErr := sessionManager.PopulateSessionContext(r)
 			authHeader := extractAuthHeader(r)
 			authorizedHeader := authorizer.AuthorizeApi(authHeader)
 
@@ -36,7 +36,7 @@ func NewApiAuthenticationRequiredMiddleware(sessionManager sessions.SessionMange
 				return
 			}
 
-			next.ServeHTTP(w, r)
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }

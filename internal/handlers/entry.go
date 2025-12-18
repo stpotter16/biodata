@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/stpotter16/biodata/internal/handlers/sessions"
 	"github.com/stpotter16/biodata/internal/parse"
 	"github.com/stpotter16/biodata/internal/store"
 	"github.com/stpotter16/biodata/internal/types"
@@ -58,8 +59,17 @@ func entryGet(store store.Store) http.HandlerFunc {
 	}
 }
 
-func entryPost(store store.Store) http.HandlerFunc {
+func entryPost(sessionManager sessions.SessionManger, store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		session, err := sessionManager.SessionFromContext(r.Context())
+		if err != nil {
+			http.Error(w, "Could not validate session", http.StatusBadRequest)
+			return
+		}
+		if !validateSessionCsrf(session, r) {
+			http.Error(w, "Invalid session token", http.StatusBadRequest)
+			return
+		}
 		newEntry, err := parse.ParseEntryPost(r)
 		if err != nil {
 			http.Error(w, "Invalid new entry request", http.StatusBadRequest)
@@ -73,8 +83,17 @@ func entryPost(store store.Store) http.HandlerFunc {
 	}
 }
 
-func entryPut(store store.Store) http.HandlerFunc {
+func entryPut(sessionManager sessions.SessionManger, store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		session, err := sessionManager.SessionFromContext(r.Context())
+		if err != nil {
+			http.Error(w, "Could not validate session", http.StatusBadRequest)
+			return
+		}
+		if !validateSessionCsrf(session, r) {
+			http.Error(w, "Invalid session token", http.StatusBadRequest)
+			return
+		}
 		updatedEntry, err := parse.ParseEntryPut(r)
 		if err != nil {
 			http.Error(w, "Invalid entry update request", http.StatusBadRequest)
