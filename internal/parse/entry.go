@@ -82,7 +82,6 @@ func ParseEntryPost(r *http.Request) (types.Entry, error) {
 }
 
 func ParseEntryPut(r *http.Request) (types.Entry, error) {
-	// TODO - get date from url
 	dateStr := r.PathValue("date")
 	entryDate, err := time.Parse("2006-01-02", dateStr)
 	if err != nil {

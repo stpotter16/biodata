@@ -57,8 +57,8 @@ func (s Store) GetEntry(entryDate time.Time) (types.Entry, error) {
 	WHERE entry_date = ?
 	`
 
-	// TODO - what to do with this context
 	dateStr := formatTime(entryDate)
+	// TODO - what to do with this context
 	row := s.db.QueryRow(context.TODO(), query, dateStr)
 	var entryDTO types.EntryDTO
 	var date string
