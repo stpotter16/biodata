@@ -1,93 +1,95 @@
-{{ define "title" }} Edit Entry {{ end }} {{ define "script-tags" }}
-<script type="module">
-  const editEntryForm = document.getElementById("edit-entry");
+{{ define "title" }}Edit Entry{{ end }}
+{{ define "script-tags" }}
+  <script type="module">
+    const editEntryForm = document.getElementById("edit-entry");
 
-  function setEditEntryFormState(isEnabled) {
-    document.querySelectorAll("#edit-entry input").forEach((el) => {
-      el.disabled = !isEnabled;
-    });
-  }
-
-  function disableEditEntryForm() {
-    setEditEntryFormState(false);
-  }
-
-  function enableEditEntryForm() {
-    setEditEntryFormState(true);
-  }
-
-  async function editEntry(date, weight, waist, bp) {
-    const url = `/api/entries/${date}`;
-    return fetch(url, {
-      method: "PUT",
-      mode: "same-origin",
-      credentials: "include",
-      cache: "no-cache",
-      redirect: "error",
-      body: JSON.stringify({
-        weight: weight,
-        waist: waist,
-        bp: bp,
-      }),
-    }).then((response) => {
-      if (!response.ok) {
-        return response.text().then((error) => {
-          return Promise.reject(error);
-        });
-      }
-      return Promise.resolve();
-    });
-  }
-
-  // Close button for error message
-  document.getElementById("error-close").addEventListener("click", () => {
-    document.getElementById("error-message").style.display = "none";
-  });
-
-  editEntryForm.addEventListener("submit", (evt) => {
-    evt.preventDefault();
-    const date = document.getElementById("date").innerText;
-    const weight = document.getElementById("weight").value;
-    const waist = document.getElementById("waist").value;
-    const bp = document.getElementById("bp").value;
-    disableEditEntryForm();
-    editEntry(date, weight, waist, bp)
-      .then(() => {
-        document.location = "/";
-      })
-      .catch((error) => {
-        enableEditEntryForm();
-        document.getElementById("error-text").textContent = error;
-        document.getElementById("error-message").style.display = "flex";
+    function setEditEntryFormState(isEnabled) {
+      document.querySelectorAll("#edit-entry input").forEach((el) => {
+        el.disabled = !isEnabled;
       });
-  });
-</script>
-{{ end }} {{ define "content" }}
-<h1 id="date">{{ formatDate .Entry.Date }}</h1>
-<div id="error-message" style="display: none">
-  <span id="error-text"></span>
-  <button id="error-close" type="button">&times;</button>
-</div>
-<form id="edit-entry">
-  <label for="weight">Weight</label>
-  <input
-    type="number"
-    name="weight"
-    id="weight"
-    value="{{ .Entry.Weight.FormValue }}"
-    step="0.1"
-    required
-  />
-  <label for="waist">Waist</label>
-  <input
-    type="number"
-    name="waist"
-    id="waist"
-    value="{{ .Entry.Waist.FormValue }}"
-    step="0.1"
-  />
-  <label for="bp">BP</label>
-  <input type="text" name="bp" id="bp" value="{{ .Entry.BP }}" />
-  <input type="submit" value="Update" />
-</form>
+    }
+
+    function disableEditEntryForm() {
+      setEditEntryFormState(false);
+    }
+
+    function enableEditEntryForm() {
+      setEditEntryFormState(true);
+    }
+
+    async function editEntry(date, weight, waist, bp) {
+      const url = `/api/entries/${date}`;
+      return fetch(url, {
+        method: "PUT",
+        mode: "same-origin",
+        credentials: "include",
+        cache: "no-cache",
+        redirect: "error",
+        body: JSON.stringify({
+          weight: weight,
+          waist: waist,
+          bp: bp,
+        }),
+      }).then((response) => {
+        if (!response.ok) {
+          return response.text().then((error) => {
+            return Promise.reject(error);
+          });
+        }
+        return Promise.resolve();
+      });
+    }
+
+    // Close button for error message
+    document.getElementById("error-close").addEventListener("click", () => {
+      document.getElementById("error-message").style.display = "none";
+    });
+
+    editEntryForm.addEventListener("submit", (evt) => {
+      evt.preventDefault();
+      const date = document.getElementById("date").innerText;
+      const weight = document.getElementById("weight").value;
+      const waist = document.getElementById("waist").value;
+      const bp = document.getElementById("bp").value;
+      disableEditEntryForm();
+      editEntry(date, weight, waist, bp)
+        .then(() => {
+          document.location = "/";
+        })
+        .catch((error) => {
+          enableEditEntryForm();
+          document.getElementById("error-text").textContent = error;
+          document.getElementById("error-message").style.display = "flex";
+        });
+    });
+  </script>
+{{ end }}
+{{ define "content" }}
+  <h1 id="date">{{ formatDate .Entry.Date }}</h1>
+  <div id="error-message" style="display: none">
+    <span id="error-text"></span>
+    <button id="error-close" type="button">&times;</button>
+  </div>
+  <form id="edit-entry">
+    <label for="weight">Weight</label>
+    <input
+      type="number"
+      name="weight"
+      id="weight"
+      value="{{ .Entry.Weight.FormValue }}"
+      step="0.1"
+      required
+    />
+    <label for="waist">Waist</label>
+    <input
+      type="number"
+      name="waist"
+      id="waist"
+      value="{{ .Entry.Waist.FormValue }}"
+      step="0.1"
+    />
+    <label for="bp">BP</label>
+    <input type="text" name="bp" id="bp" value="{{ .Entry.BP }}" />
+    <input type="submit" value="Update" />
+  </form>
 {{ end }}

@@ -1,81 +1,83 @@
-{{ define "title" }} Add Entry {{ end }} {{ define "script-tags" }}
-<script type="module">
-  const newEntryForm = document.getElementById("new-entry");
+{{ define "title" }}Add Entry{{ end }}
+{{ define "script-tags" }}
+  <script type="module">
+    const newEntryForm = document.getElementById("new-entry");
 
-  function setNewEntryFormState(isEnabled) {
-    document.querySelectorAll("#new-entry input").forEach((el) => {
-      el.disabled = !isEnabled;
-    });
-  }
-
-  function disableNewEntryForm() {
-    setNewEntryFormState(false);
-  }
-
-  function enableNewEntryForm() {
-    setNewEntryFormState(true);
-  }
-
-  async function newEntry(date, weight, waist, bp) {
-    return fetch("/api/entry", {
-      method: "POST",
-      mode: "same-origin",
-      credentials: "include",
-      cache: "no-cache",
-      redirect: "error",
-      body: JSON.stringify({
-        date: date,
-        weight: weight,
-        waist: waist,
-        bp: bp,
-      }),
-    }).then((response) => {
-      if (!response.ok) {
-        return response.text().then((error) => {
-          return Promise.reject(error);
-        });
-      }
-      return Promise.resolve();
-    });
-  }
-
-  // Close button for error message
-  document.getElementById("error-close").addEventListener("click", () => {
-    document.getElementById("error-message").style.display = "none";
-  });
-
-  newEntryForm.addEventListener("submit", (evt) => {
-    evt.preventDefault();
-    const date = document.getElementById("date").value;
-    const weight = document.getElementById("weight").value;
-    const waist = document.getElementById("waist").value;
-    const bp = document.getElementById("bp").value;
-    disableNewEntryForm();
-    newEntry(date, weight, waist, bp)
-      .then(() => {
-        document.location = "/";
-      })
-      .catch((error) => {
-        enableNewEntryForm();
-        document.getElementById("error-text").textContent = error;
-        document.getElementById("error-message").style.display = "flex";
+    function setNewEntryFormState(isEnabled) {
+      document.querySelectorAll("#new-entry input").forEach((el) => {
+        el.disabled = !isEnabled;
       });
-  });
-</script>
-{{ end }} {{ define "content" }}
-<div id="error-message" style="display: none">
-  <span id="error-text"></span>
-  <button id="error-close" type="button">&times;</button>
-</div>
-<form id="new-entry">
-  <label for="date">Date</label>
-  <input type="date" name="date" id="date" required />
-  <label for="weight">Weight</label>
-  <input type="number" name="weight" id="weight" step="0.1" required />
-  <label for="waist">Waist</label>
-  <input type="number" name="waist" id="waist" step="0.1" />
-  <label for="bp">BP</label>
-  <input type="text" name="bp" id="bp" />
-  <input type="submit" value="Add" />
-</form>
+    }
+
+    function disableNewEntryForm() {
+      setNewEntryFormState(false);
+    }
+
+    function enableNewEntryForm() {
+      setNewEntryFormState(true);
+    }
+
+    async function newEntry(date, weight, waist, bp) {
+      return fetch("/api/entry", {
+        method: "POST",
+        mode: "same-origin",
+        credentials: "include",
+        cache: "no-cache",
+        redirect: "error",
+        body: JSON.stringify({
+          date: date,
+          weight: weight,
+          waist: waist,
+          bp: bp,
+        }),
+      }).then((response) => {
+        if (!response.ok) {
+          return response.text().then((error) => {
+            return Promise.reject(error);
+          });
+        }
+        return Promise.resolve();
+      });
+    }
+
+    // Close button for error message
+    document.getElementById("error-close").addEventListener("click", () => {
+      document.getElementById("error-message").style.display = "none";
+    });
+
+    newEntryForm.addEventListener("submit", (evt) => {
+      evt.preventDefault();
+      const date = document.getElementById("date").value;
+      const weight = document.getElementById("weight").value;
+      const waist = document.getElementById("waist").value;
+      const bp = document.getElementById("bp").value;
+      disableNewEntryForm();
+      newEntry(date, weight, waist, bp)
+        .then(() => {
+          document.location = "/";
+        })
+        .catch((error) => {
+          enableNewEntryForm();
+          document.getElementById("error-text").textContent = error;
+          document.getElementById("error-message").style.display = "flex";
+        });
+    });
+  </script>
+{{ end }}
+{{ define "content" }}
+  <div id="error-message" style="display: none">
+    <span id="error-text"></span>
+    <button id="error-close" type="button">&times;</button>
+  </div>
+  <form id="new-entry">
+    <label for="date">Date</label>
+    <input type="date" name="date" id="date" required />
+    <label for="weight">Weight</label>
+    <input type="number" name="weight" id="weight" step="0.1" required />
+    <label for="waist">Waist</label>
+    <input type="number" name="waist" id="waist" step="0.1" />
+    <label for="bp">BP</label>
+    <input type="text" name="bp" id="bp" />
+    <input type="submit" value="Add" />
+  </form>
 {{ end }}

@@ -1,72 +1,74 @@
 {{ define "script-tags" }}
-<script type="module">
-  const logoutButton = document.getElementById("logoutButton");
+  <script type="module">
+    const logoutButton = document.getElementById("logoutButton");
 
-  function setLogoutButtonState(isEnabled) {
-    logoutButton.disabled = !isEnabled;
-  }
+    function setLogoutButtonState(isEnabled) {
+      logoutButton.disabled = !isEnabled;
+    }
 
-  function disableLogoutButton() {
-    setLogoutButtonState(false);
-  }
+    function disableLogoutButton() {
+      setLogoutButtonState(false);
+    }
 
-  function enableLogoutButton() {
-    setLogoutButtonState(true);
-  }
+    function enableLogoutButton() {
+      setLogoutButtonState(true);
+    }
 
-  async function deleteLogout() {
-    return fetch("/login", {
-      method: "DELETE",
-      mode: "same-origin",
-      credentials: "include",
-      cache: "no-cache",
-      redirect: "error",
-    }).then((response) => {
-      if (!response.ok) {
-        return response.text().then((error) => {
-          return Promise.reject(error);
-        });
-      }
-      return Promise.resolve();
-    });
-  }
-
-  logoutButton.addEventListener("click", () => {
-    disableLogoutButton();
-    deleteLogout()
-      .then(() => {
-        document.location = "/";
-      })
-      .catch((error) => {
-        enableLogoutButton();
-        console.log(error);
+    async function deleteLogout() {
+      return fetch("/login", {
+        method: "DELETE",
+        mode: "same-origin",
+        credentials: "include",
+        cache: "no-cache",
+        redirect: "error",
+      }).then((response) => {
+        if (!response.ok) {
+          return response.text().then((error) => {
+            return Promise.reject(error);
+          });
+        }
+        return Promise.resolve();
       });
-  });
-</script>
-{{ end }} {{ define "content" }} {{ if .Entries }}
-<table>
-  <tr>
-    <th>Date</th>
-    <th>Weight</th>
-    <th>Waist</th>
-    <th>BP</th>
-    <th>Actions</th>
-  </tr>
-  {{ range .Entries }}
-  <tr>
-    <td>{{ formatDate .Date }}</td>
-    <td>{{ .Weight }}</td>
-    <td>{{ .Waist }}</td>
-    <td>{{ .BP }}</td>
-    <td><a href="/entry/{{ formatDate .Date }}/edit">Edit</a></td>
-  </tr>
-  {{ end }}
-</table>
-{{ else }}
-<h2>No entries yet. Add one!</h2>
+    }
+
+    logoutButton.addEventListener("click", () => {
+      disableLogoutButton();
+      deleteLogout()
+        .then(() => {
+          document.location = "/";
+        })
+        .catch((error) => {
+          enableLogoutButton();
+          console.log(error);
+        });
+    });
+  </script>
 {{ end }}
-<div>
-  <button id="logoutButton">Logout</button>
-  <a href="/entry/new">Add entry</a>
-</div>
+{{ define "content" }}
+  {{ if .Entries }}
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Weight</th>
+        <th>Waist</th>
+        <th>BP</th>
+        <th>Actions</th>
+      </tr>
+      {{ range .Entries }}
+        <tr>
+          <td>{{ formatDate .Date }}</td>
+          <td>{{ .Weight }}</td>
+          <td>{{ .Waist }}</td>
+          <td>{{ .BP }}</td>
+          <td><a href="/entry/{{ formatDate .Date }}/edit">Edit</a></td>
+        </tr>
+      {{ end }}
+    </table>
+  {{ else }}
+    <h2>No entries yet. Add one!</h2>
+  {{ end }}
+  <div>
+    <button id="logoutButton">Logout</button>
+    <a href="/entry/new">Add entry</a>
+  </div>
 {{ end }}
