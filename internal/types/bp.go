@@ -19,5 +19,5 @@ func (bp BP) String() string {
 	if bp.isNil() {
 		return ""
 	}
-	return fmt.Sprintf("%.1f/%.1f", *bp.Systolic, *bp.Diastolic)
+	return fmt.Sprintf("%g/%g", *bp.Systolic, *bp.Diastolic)
 }

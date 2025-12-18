@@ -12,7 +12,6 @@ Track basic biodata
 ## Clean up
 
 - All the TODOs
-- Clean up Waist, Weight, BP string formatting to use %g
 
 ## Security
 

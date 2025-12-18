@@ -25,7 +25,7 @@ func (w Weight) String() string {
 	if w.isNil() {
 		return ""
 	}
-	return fmt.Sprintf("%.1f", w.Float64())
+	return fmt.Sprintf("%g", w.Float64())
 }
 
 func (w Weight) FormValue() string {
