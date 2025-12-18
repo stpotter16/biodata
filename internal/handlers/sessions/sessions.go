@@ -11,6 +11,10 @@ import (
 	"github.com/stpotter16/biodata/internal/store/db"
 )
 
+type contextKey struct {
+	name string
+}
+
 const SESSION_KEY = "session"
 const SESSION_ENV_KEY = "BIODATA_SESSION_ENV_KEY"
 
@@ -29,7 +33,7 @@ type SessionManger struct {
 func New(db db.DB, getenv func(string) string) (SessionManger, error) {
 	hmacSecret := getenv(SESSION_ENV_KEY)
 	if hmacSecret == "" {
-		return SessionManger{}, errors.New("Could not locate HMAC secret key")
+		return SessionManger{}, errors.New("could not locate HMAC secret key")
 	}
 
 	s := SessionManger{
@@ -90,14 +94,16 @@ func (s SessionManger) PopulateSessionContext(r *http.Request) (context.Context,
 		return nil, err
 	}
 
-	return context.WithValue(r.Context(), SESSION_KEY, session), nil
+	ctxKey := contextKey{SESSION_KEY}
+	return context.WithValue(r.Context(), ctxKey, session), nil
 }
 
 func (s SessionManger) SessionFromContext(ctx context.Context) (Session, error) {
-	session, okay := ctx.Value(SESSION_KEY).(Session)
+	ctxKey := contextKey{SESSION_KEY}
+	session, okay := ctx.Value(ctxKey).(Session)
 	if !okay {
 		log.Printf("Unable to extract session from context")
-		return Session{}, errors.New("No session info in context")
+		return Session{}, errors.New("no session info in context")
 	}
 	return session, nil
 }
@@ -112,7 +118,7 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 	cookieVals := strings.SplitN(cookie, "::", 2)
 	if len(cookieVals) != 2 {
 		log.Printf("Invalid cookie value: %s", cookie)
-		return Session{}, errors.New("Cookie is invalid")
+		return Session{}, errors.New("cookie is invalid")
 	}
 	cookieToken := cookieVals[1]
 
@@ -128,7 +134,7 @@ func (s SessionManger) loadSession(r *http.Request) (Session, error) {
 	}
 
 	if cookieToken != session.ID {
-		return Session{}, errors.New("Invalid session token")
+		return Session{}, errors.New("invalid session token")
 	}
 
 	return session, nil

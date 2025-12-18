@@ -144,7 +144,7 @@ func parseBPString(bps string) (types.BP, error) {
 	parts := strings.Split(bps, "/")
 	if len(parts) != 2 {
 		log.Printf("Invalid BP string received. Got %s", bps)
-		return types.BP{}, fmt.Errorf("Expected string with systolic and diastolic. Received %s", bps)
+		return types.BP{}, fmt.Errorf("expected string with systolic and diastolic. Received %s", bps)
 	}
 	systolicFloat, err := strconv.ParseFloat(parts[0], 64)
 	if err != nil {

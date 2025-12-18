@@ -33,7 +33,7 @@ func run(
 
 	dbPath := getenv("BIODATA_DB_PATH")
 	if dbPath == "" {
-		return errors.New("Database environment variable not set")
+		return errors.New("database environment variable not set")
 	}
 	flag.Parse()
 
@@ -82,7 +82,7 @@ func run(
 	defer shutdownCancel()
 
 	if err := server.Shutdown(shutdownCtx); err != nil {
-		return fmt.Errorf("Server shutdown error: %w", err)
+		return fmt.Errorf("server shutdown error: %w", err)
 	}
 	return nil
 }

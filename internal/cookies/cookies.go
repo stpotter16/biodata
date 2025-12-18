@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	ErrCookieNotFound = errors.New("Cookie not found")
-	ErrInvalidValue   = errors.New("Invalid cookie value")
-	ErrValueTooLong   = errors.New("Cookie value too long")
+	ErrCookieNotFound = errors.New("cookie not found")
+	ErrInvalidValue   = errors.New("invalid cookie value")
+	ErrValueTooLong   = errors.New("cookie value too long")
 )
 
 func ReadSigned(r *http.Request, name string, secretKey string) (string, error) {

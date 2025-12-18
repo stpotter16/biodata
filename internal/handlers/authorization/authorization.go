@@ -13,7 +13,7 @@ type Authorizer struct {
 func New(getenv func(string) string) (Authorizer, error) {
 	passphrase := getenv("BIODATA_PASSPHRASE")
 	if passphrase == "" {
-		return Authorizer{}, errors.New("Could not locate passphrase environment variable")
+		return Authorizer{}, errors.New("could not locate passphrase environment variable")
 	}
 
 	a := Authorizer{
@@ -24,15 +24,9 @@ func New(getenv func(string) string) (Authorizer, error) {
 }
 
 func (a Authorizer) Authorize(loginRequest types.LoginRequest) bool {
-	if loginRequest.Passphrase == a.passphrase {
-		return true
-	}
-	return false
+	return loginRequest.Passphrase == a.passphrase
 }
 
 func (a Authorizer) AuthorizeApi(headerVal string) bool {
-	if headerVal == a.passphrase {
-		return true
-	}
-	return false
+	return headerVal == a.passphrase
 }
