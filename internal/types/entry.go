@@ -29,7 +29,7 @@ type Entry struct {
 	BP     BP
 }
 
-func ToEntryApi(entry Entry) (EntryAPI, error) {
+func ToEntryApi(entry Entry) EntryAPI {
 	dateStr := entry.Date.Format(time.RFC3339)
 	apiEntry := EntryAPI{
 		Date:   dateStr,
@@ -37,5 +37,5 @@ func ToEntryApi(entry Entry) (EntryAPI, error) {
 		Waist:  entry.Waist.String(),
 		BP:     entry.BP.String(),
 	}
-	return apiEntry, nil
+	return apiEntry
 }

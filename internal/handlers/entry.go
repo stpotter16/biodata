@@ -21,8 +21,7 @@ func entriesGet(store store.Store) http.HandlerFunc {
 			return
 		}
 		for _, entry := range entries {
-			// TODO - Do I really need to return an error here?
-			apiEntry, _ := types.ToEntryApi(entry)
+			apiEntry := types.ToEntryApi(entry)
 			apiEntries = append(apiEntries, apiEntry)
 		}
 
@@ -49,8 +48,7 @@ func entryGet(store store.Store) http.HandlerFunc {
 			http.Error(w, "Error loading entry", http.StatusInternalServerError)
 			return
 		}
-		// TODO - Do I need this error?
-		apiEntry, _ := types.ToEntryApi(entry)
+		apiEntry := types.ToEntryApi(entry)
 
 		w.Header().Set("Content-Type", "application/json")
 		if err = json.NewEncoder(w).Encode(apiEntry); err != nil {
