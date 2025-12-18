@@ -7,17 +7,18 @@ Track basic biodata
 - Favicon
 - Charts
 
+# Fixes
+
+## Go linting
+
+- TODO
+
 # Improvements
 
 ## Security
 
 - CSRF
 - CSP (policy, nonce)
-
-## Tests
-
-- Tests (unit, integration) - dry it up
-  - Need test runners too. Good examples abound here
 
 ## Static analysis
 
