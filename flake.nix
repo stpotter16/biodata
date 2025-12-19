@@ -97,6 +97,7 @@
           echo "litestream" "$(litestream version)"
           echo "shellcheck" "$(shellcheck --version | grep '^version:')"
           sqlfluff --version
+          unset DEVELOPER_DIR
         '';
       };
 
