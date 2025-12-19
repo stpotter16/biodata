@@ -44,3 +44,5 @@ biodata.sqlite-wal
 
 # Frontend stuff
 node_modules/
+test-results/
+playwright-report/

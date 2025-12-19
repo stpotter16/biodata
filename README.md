@@ -11,7 +11,6 @@ Track basic biodata
 
 ## Security
 
-- CSRF
 - CSP (policy, nonce)
 
 ## Integration Tests

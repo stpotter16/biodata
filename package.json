@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "prettier": "3.7.4",
     "prettier-plugin-go-template": "^0.0.15"
   }
