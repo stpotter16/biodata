@@ -34,3 +34,6 @@ lint/frontend:
 
 test/go:
 	./dev-scripts/run-go-tests.sh
+
+test/e2e:
+	./dev-scripts/run-e2e-tests.sh
