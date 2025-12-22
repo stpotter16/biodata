@@ -4,8 +4,7 @@ Track basic biodata
 
 # Feature Requests
 
-- Favicon
-- Charts
+- Charts: Let's see if I ever end up actually needing these...
 
 # Bugs
 
