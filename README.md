@@ -7,6 +7,12 @@ Track basic biodata
 - Favicon
 - Charts
 
+# Bugs
+
+## Session bug
+
+This still seems to be lingering, especially on mobile Safari.
+
 # Improvements
 
 ## Security
@@ -15,7 +21,7 @@ Track basic biodata
 
 ## Integration Tests
 
-- Try playwright?
+- More complex scenarios
 
 ## Structure logging
 
