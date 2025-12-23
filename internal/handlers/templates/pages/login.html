@@ -1,6 +1,6 @@
 {{ define "title" }}Login{{ end }}
 {{ define "script-tags" }}
-  <script type="module">
+  <script type="module" nonce="{{ .CspNonce }}">
     const loginForm = document.getElementById("login");
 
     function setLoginFormState(isEnabled) {

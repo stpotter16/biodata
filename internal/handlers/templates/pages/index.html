@@ -1,5 +1,5 @@
 {{ define "script-tags" }}
-  <script type="module">
+  <script type="module" nonce="{{ .CspNonce }}">
     const logoutButton = document.getElementById("logoutButton");
 
     function setLogoutButtonState(isEnabled) {

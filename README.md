@@ -14,10 +14,6 @@ This still seems to be lingering, especially on mobile Safari.
 
 # Improvements
 
-## Security
-
-- CSP (policy, nonce)
-
 ## Integration Tests
 
 - More complex scenarios

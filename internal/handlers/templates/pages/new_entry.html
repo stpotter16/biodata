@@ -1,6 +1,6 @@
 {{ define "title" }}Add Entry{{ end }}
 {{ define "script-tags" }}
-  <script type="module">
+  <script type="module" nonce="{{ .CspNonce }}">
     const newEntryForm = document.getElementById("new-entry");
 
     function setNewEntryFormState(isEnabled) {
