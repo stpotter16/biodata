@@ -54,6 +54,51 @@ func (s Store) GetEntries(ctx context.Context) ([]types.Entry, error) {
 	return entries, nil
 }
 
+func (s Store) GetLastTenEntries(ctx context.Context) ([]types.Entry, error) {
+	query := `
+	SELECT id, entry_date, weight, waist, bp, created, last_modified
+	FROM entry
+	ORDER BY id DESC
+	LIMIT 10;
+	`
+
+	rows, err := s.db.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err = rows.Close(); err != nil {
+			log.Printf("Error closing rows: %v", err)
+		}
+	}()
+
+	var entries []types.Entry
+	for rows.Next() {
+		var e types.EntryDTO
+		var date string
+		err := rows.Scan(&e.Id, &date, &e.Weight, &e.Waist, &e.Bp, &e.Created, &e.LastModified)
+		if err != nil {
+			return nil, err
+		}
+		entryDate, err := parseTime(date)
+		if err != nil {
+			return nil, err
+		}
+		e.Date = entryDate
+		entry, err := parse.ParseEntryDTO(e)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, entry)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return entries, nil
+}
+
 func (s Store) GetEntry(ctx context.Context, entryDate time.Time) (types.Entry, error) {
 	query := `
 	SELECT id, entry_date, weight, waist, bp, created, last_modified

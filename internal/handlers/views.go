@@ -66,7 +66,13 @@ func indexGet(sessionManager sessions.SessionManger, store store.Store) http.Han
 			http.Error(w, "Could not validate session", http.StatusBadRequest)
 			return
 		}
-		entries, err := store.GetEntries(r.Context())
+		loadAll := r.URL.Query().Get("all")
+		var entries []types.Entry
+		if loadAll == "true" {
+			entries, err = store.GetEntries(r.Context())
+		} else {
+			entries, err = store.GetLastTenEntries(r.Context())
+		}
 		if err != nil {
 			log.Printf("Could not read existing entries: %v", err)
 			http.Error(w, "Could not load entries - try again later", http.StatusInternalServerError)
