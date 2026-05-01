@@ -1,41 +1,54 @@
-app = "biodata"
+# fly.toml app configuration file generated for biodata on 2026-04-30T16:27:30-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
-
-[build.args]
-  TZ = "America/New_York"
-
-[env]
-  PORT = "8080"
+app = 'biodata'
+primary_region = 'iad'
+kill_signal = 'SIGINT'
+kill_timeout = '5s'
 
 [experimental]
-  allowed_public_ports = []
   auto_rollback = true
 
-[[services]]
-  http_checks = []
+[build]
+
+[env]
+  PORT = '8080'
+  BIODATA_DB_PATH='/data/biodata'
+
+[http_service]
   internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 8080
+  processes = ['app']
+
+  [[services.ports]]
+    port = 80
+    handlers = ['http']
+
+  [[services.ports]]
+    port = 443
+    handlers = ['tls', 'http']
 
   [services.concurrency]
+    type = 'connections'
     hard_limit = 25
     soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
 
   [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+    interval = '15s'
+    timeout = '2s'
+    grace_period = '1s'
+
+[[vm]]
+  memory = '1gb'
+  cpus = 1
+  memory_mb = 1024

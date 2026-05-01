@@ -10,7 +10,7 @@ set -u
 set -x
 
 go build \
-    -ldflags "-s -w" \
+    -ldflags "-s -w -linkmode external -extldflags '-static'" \
     -tags sqlite_omit_load_extension \
-    -o ./release/server \
+    -o ./release/biodata \
     cmd/server/main.go
