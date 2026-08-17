@@ -1,0 +1,32 @@
+[Unit]
+Description=biodata server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=biodata
+Group=biodata
+WorkingDirectory=/opt/biodata
+ExecStart=/opt/biodata/biodata
+EnvironmentFile=/etc/biodata/biodata.env
+
+# main.go only handles os.Interrupt (SIGINT), not SIGTERM, so tell systemd
+# to send SIGINT on stop/restart to get a graceful server.Shutdown().
+KillSignal=SIGINT
+TimeoutStopSec=10s
+
+Restart=on-failure
+RestartSec=2s
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/biodata
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target
