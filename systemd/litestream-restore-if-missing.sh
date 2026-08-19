@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 # Restore biodata.sqlite from the litestream replica if it doesn't already
-# exist locally. Mirrors the restore step in ./docker-entrypoint. Run by
-# hand as a one-time step (initial provisioning / disaster recovery) per
-# systemd/SETUP.md — not wired into any systemd unit.
+# exist locally. Run by hand as a one-time step (initial provisioning /
+# disaster recovery) per systemd/SETUP.md — not wired into any systemd unit.
 
 set -euo pipefail
 

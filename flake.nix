@@ -21,9 +21,6 @@
 
     #24.11.1 release
     nodejs-nixpkgs.url = "github:NixOS/nixpkgs/a672be65651c80d3f592a89b3945466584a22069";
-
-    #0.4.36 release
-    flyctl-nixpkgs.url = "github:NixOS/nixpkgs/01fbdeef22b76df85ea168fbfe1bfd9e63681b30";
   };
 
   outputs = {
@@ -35,7 +32,6 @@
     shellcheck-nixpkgs,
     sqlfluff-nixpkgs,
     nodejs-nixpkgs,
-    flyctl-nixpkgs,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       gopkg = go-nixpkgs.legacyPackages.${system};
@@ -45,7 +41,6 @@
       shellcheck = shellcheck-nixpkgs.legacyPackages.${system}.shellcheck;
       sqlfluff = sqlfluff-nixpkgs.legacyPackages.${system}.sqlfluff;
       nodejs = nodejs-nixpkgs.legacyPackages.${system}.nodejs_24;
-      flyctl = flyctl-nixpkgs.legacyPackages.${system}.flyctl;
     in {
       packages.default = gopkg.buildGoModule {
         pname = "biodata";
@@ -87,7 +82,6 @@
           shellcheck
           sqlfluff
           nodejs
-          flyctl
         ];
 
         shellHook = ''
@@ -99,7 +93,6 @@
           echo "node" "$(node --version)"
           echo "npm" "$(npm --version)"
           echo "npx" "$(npx --version)"
-          fly version | cut -d ' ' -f 1-3
           echo "sqlite" "$(sqlite3 --version | cut -d ' ' -f 1-2)"
           echo "litestream" "$(litestream version)"
           echo "shellcheck" "$(shellcheck --version | grep '^version:')"

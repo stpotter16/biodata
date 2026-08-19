@@ -244,20 +244,16 @@ unaffected either way.
   *directory* to `660` — directories need the execute bit to be
   traversable at all, so that would break both processes' access
   entirely; `2770` from step 3 is already correct.
-- **litestream.yml vars vs Fly/Docker**: `litestream.yml`'s env var names
+- **litestream.yml vars vs .env.example**: `litestream.yml`'s env var names
   (`ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, `BIOTRAK_BUCKET`,
-  `BIOTRAK_ENDPOINT`, `BIOTRAK_PATH`) no longer match `.env.example` or
-  `fly.toml`, which still expect the old `LITESTREAM_*` names and
-  `BIODATA_DB_PATH`. This repo's Fly/Docker deployment path is currently
-  unused, so that divergence was left as-is rather than updating both
-  paths — if Fly deployment is revived later, `docker-entrypoint`'s
-  `LITESTREAM_BUCKET` check and the Fly secrets will need to be reconciled
-  with whichever naming wins.
+  `BIOTRAK_ENDPOINT`, `BIOTRAK_PATH`) don't match `.env.example`'s
+  `LITESTREAM_*` names. This divergence predates the systemd deployment
+  and hasn't been reconciled yet — pick whichever naming wins and update
+  both when touching this.
 - **SIGINT vs SIGTERM**: `cmd/server/main.go` only handles `os.Interrupt`
   (SIGINT), not SIGTERM. `biodata.service` sets `KillSignal=SIGINT` so
   `systemctl stop`/`restart` still trigger the app's graceful
-  `server.Shutdown()` instead of a hard kill. This mirrors `fly.toml`'s
-  `kill_signal = 'SIGINT'`.
+  `server.Shutdown()` instead of a hard kill.
 - **Startup ordering**: `biodata.service` sets `After=litestream.service`
   and `Wants=litestream.service` (a soft dependency — `systemctl start
   biodata.service` also brings up litestream, but a litestream failure
@@ -267,7 +263,7 @@ unaffected either way.
   step (see step 8), there's no automatic ordering dependency to enforce
   and the hard requirement was just extra blast radius for no benefit.
 - **`snapshot-interval` and restore time**: litestream 0.3.x (what's
-  pinned here, matching the Dockerfile) has no compaction — unlike the
+  pinned here) has no compaction — unlike the
   newer 0.5.x LTX rewrite, it never merges old WAL segment objects into
   larger ones. WAL segments just accumulate between snapshots, so a long
   `snapshot-interval` combined with a short `sync-interval` (`1h` and
