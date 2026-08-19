@@ -1,14 +1,14 @@
-access-key-id: ${LITESTREAM_ACCESS_KEY_ID}
-secret-access-key: ${LITESTREAM_SECRET_ACCESS_KEY}
+access-key-id: ${ACCESS_KEY_ID}
+secret-access-key: ${SECRET_ACCESS_KEY}
 dbs:
-  - path: ${BIODATA_DB_PATH}/biodata.sqlite
+  - path: ${BIOTRAK_PATH}/biodata.sqlite
     replicas:
       - type: s3
-        bucket: ${LITESTREAM_BUCKET}
+        bucket: ${BIOTRAK_BUCKET}
         path: db
-        endpoint: ${LITESTREAM_ENDPOINT}
+        endpoint: ${BIOTRAK_ENDPOINT}
         force-path-style: true
         retention: 168h # 7 days
-        snapshot-interval: 24h
+        snapshot-interval: 1h
         validation-interval: 72h
         sync-interval: 1s

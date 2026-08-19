@@ -1,7 +1,7 @@
 [Unit]
 Description=biodata server
-After=network-online.target
-Wants=network-online.target
+After=network-online.target litestream.service
+Wants=network-online.target litestream.service
 
 [Service]
 Type=simple
@@ -10,6 +10,7 @@ Group=biodata
 WorkingDirectory=/opt/biodata
 ExecStart=/opt/biodata/biodata
 EnvironmentFile=/etc/biodata/biodata.env
+UMask=0007
 
 # main.go only handles os.Interrupt (SIGINT), not SIGTERM, so tell systemd
 # to send SIGINT on stop/restart to get a graceful server.Shutdown().
