@@ -11,4 +11,4 @@ dbs:
         retention: 168h # 7 days
         snapshot-interval: 1h
         validation-interval: 72h
-        sync-interval: 1s
+        sync-interval: 10s
